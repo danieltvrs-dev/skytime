@@ -1,20 +1,19 @@
-# Skytime
+## Skytime
 
-Dashboard de clima com dados em tempo real, previsão dos próximos dias e detecção automática de localização.
+Tempo agora, previsão dos próximos dias e localização automática numa interface limpa.
 
-Projeto em construção. O objetivo é montar uma aplicação fullstack do zero, do banco até a interface, usando ferramentas atuais do mercado.
+### O que faz
 
-## Stack
+- Condições atuais: temperatura, sensação térmica, umidade, vento e estado do céu.
+- Previsão para os próximos 5 dias com mínimas e máximas.
+- Previsão hora a hora.
+- Busca por nome de cidade ou detecção via GPS do navegador.
+- Histórico das últimas cidades pesquisadas.
 
-**Frontend:** React, Vite, TailwindCSS, React Router, Axios.
-**Backend:** Python, FastAPI.
-**Banco:** PostgreSQL.
-**Dados de clima:** OpenWeatherMap.
+### Stack
 
-## Como rodar
+React, Vite, TailwindCSS, React Router e Axios no cliente. Python e FastAPI no servidor. PostgreSQL para persistência. Dados meteorológicos vindos da OpenWeatherMap.
 
-Instruções de instalação e execução serão adicionadas à medida que cada parte do projeto for concluída.
+### Executando localmente
 
-## Status
-
-Em desenvolvimento ativo.
+Instruções de setup consolidadas serão publicadas conforme o app estabilizar.
