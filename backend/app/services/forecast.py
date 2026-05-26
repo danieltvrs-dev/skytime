@@ -14,11 +14,15 @@ from app.schemas.weather import (
     ForecastData,
     HourlyPoint,
 )
+from app.services.cache import TTLCache
 from app.services.weather_codes import describe
 
 FORECAST_URL = "https://api.open-meteo.com/v1/forecast"
 TIMEOUT_SECONDS = 10.0
 FORECAST_DAYS = 5
+CACHE_TTL_SECONDS = 10 * 60  # 10 minutos: dados parecem ao vivo, sem queimar a API
+
+_cache: TTLCache[ForecastData] = TTLCache(ttl_seconds=CACHE_TTL_SECONDS)
 
 _CURRENT_VARS = [
     "temperature_2m",
@@ -36,7 +40,16 @@ class ForecastServiceError(Exception):
 
 
 async def fetch_forecast(latitude: float, longitude: float) -> ForecastData:
-    """Busca o pacote de previsão completo para um par de coordenadas."""
+    """Busca o pacote de previsão completo para um par de coordenadas.
+
+    Resultado fica em cache por 10 minutos, indexado pelas coordenadas
+    arredondadas a 2 casas (resolução de ~1km, suficiente para clima).
+    """
+    cache_key = f"{round(latitude, 2)},{round(longitude, 2)}"
+    cached = _cache.get(cache_key)
+    if cached is not None:
+        return cached
+
     params = {
         "latitude": latitude,
         "longitude": longitude,
@@ -56,7 +69,9 @@ async def fetch_forecast(latitude: float, longitude: float) -> ForecastData:
             f"Falha ao consultar forecast: {exc}"
         ) from exc
 
-    return _parse(data)
+    result = _parse(data)
+    _cache.set(cache_key, result)
+    return result
 
 
 def _parse(data: dict) -> ForecastData:
