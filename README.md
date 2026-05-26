@@ -12,7 +12,7 @@ Tempo agora, previsão dos próximos dias e localização automática numa inter
 
 ### Stack
 
-React, Vite, TailwindCSS, React Router e Axios no cliente. Python e FastAPI no servidor. PostgreSQL para persistência. Dados meteorológicos vindos da OpenWeatherMap.
+React, Vite, TailwindCSS, React Router e Axios no cliente. Python e FastAPI no servidor. PostgreSQL para persistência. Dados meteorológicos vindos da Open-Meteo.
 
 ### Executando localmente
 
