@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Loader2 } from 'lucide-react'
 
 import DailyForecast from './components/DailyForecast'
+import HourlyForecast from './components/HourlyForecast'
 import WeatherCard from './components/WeatherCard'
 import { getWeather } from './services/weather'
 
@@ -37,6 +38,7 @@ function App() {
         {data && !loading && !error && (
           <div className="space-y-6">
             <WeatherCard location={data.location} current={data.current} />
+            <HourlyForecast hourly={data.hourly} currentTime={data.current.time} />
             <DailyForecast daily={data.daily} />
           </div>
         )}
