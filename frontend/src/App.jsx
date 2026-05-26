@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Loader2 } from 'lucide-react'
 
+import DailyForecast from './components/DailyForecast'
 import WeatherCard from './components/WeatherCard'
 import { getWeather } from './services/weather'
 
@@ -34,7 +35,10 @@ function App() {
         {loading && <LoadingState />}
         {error && !loading && <ErrorState error={error} />}
         {data && !loading && !error && (
-          <WeatherCard location={data.location} current={data.current} />
+          <div className="space-y-6">
+            <WeatherCard location={data.location} current={data.current} />
+            <DailyForecast daily={data.daily} />
+          </div>
         )}
       </main>
     </div>
