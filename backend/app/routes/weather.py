@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter, HTTPException, Query
 
-from app.schemas.weather import ForecastData, GeocodingResult
+from app.schemas.weather import ForecastData, GeocodingResult, WeatherResponse
 from app.services.forecast import ForecastServiceError, fetch_forecast
 from app.services.geocoding import (
     CityNotFoundError,
@@ -40,3 +40,36 @@ async def forecast_by_coords(
         raise HTTPException(
             status_code=502, detail="Serviço de previsão indisponível."
         ) from exc
+
+
+@router.get("", response_model=WeatherResponse)
+async def weather_by_city(
+    city: str = Query(..., min_length=1, description="Nome da cidade"),
+) -> WeatherResponse:
+    """Endpoint principal: recebe um nome de cidade e devolve clima completo.
+
+    Pipeline: geocoda → busca previsão → combina num só payload.
+    """
+    try:
+        location = await geocode(city)
+    except CityNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except GeocodingServiceError as exc:
+        raise HTTPException(
+            status_code=502, detail="Serviço de geocoding indisponível."
+        ) from exc
+
+    try:
+        forecast = await fetch_forecast(location.latitude, location.longitude)
+    except ForecastServiceError as exc:
+        raise HTTPException(
+            status_code=502, detail="Serviço de previsão indisponível."
+        ) from exc
+
+    return WeatherResponse(
+        location=location,
+        current=forecast.current,
+        hourly=forecast.hourly,
+        daily=forecast.daily,
+        timezone=forecast.timezone,
+    )

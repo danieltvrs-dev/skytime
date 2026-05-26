@@ -54,3 +54,17 @@ class ForecastData(BaseModel):
     hourly: list[HourlyPoint]
     daily: list[DailyPoint]
     timezone: str
+
+
+class WeatherResponse(BaseModel):
+    """Resposta consolidada do endpoint público /weather.
+
+    Junta a localização resolvida (geocoding) com o pacote de previsão
+    para que o frontend consuma tudo em uma chamada só.
+    """
+
+    location: GeocodingResult
+    current: CurrentWeather
+    hourly: list[HourlyPoint]
+    daily: list[DailyPoint]
+    timezone: str
