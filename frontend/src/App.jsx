@@ -8,29 +8,53 @@ import HourlyForecast from './components/HourlyForecast'
 import SearchBar from './components/SearchBar'
 import WeatherCard from './components/WeatherCard'
 import WhatToWearCard from './components/WhatToWearCard'
-import { getWeather } from './services/weather'
+import { useGeolocation } from './hooks/useGeolocation'
+import { getWeather, getWeatherByCoords } from './services/weather'
 import { buildDailySummary } from './utils/dailySummary'
 
-const DEFAULT_CITY = 'São Paulo'
+const DEFAULT_QUERY = { type: 'city', value: 'São Paulo' }
 
 function App() {
-  const [city, setCity] = useState(DEFAULT_CITY)
+  // query.type: 'city' (busca por nome) ou 'coords' (geolocalização).
+  // Um useEffect decide qual endpoint chamar baseado nisso.
+  const [query, setQuery] = useState(DEFAULT_QUERY)
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const geo = useGeolocation()
 
   useEffect(() => {
     let cancelled = false
     setLoading(true)
     setError(null)
 
-    getWeather(city)
+    const promise =
+      query.type === 'city'
+        ? getWeather(query.value)
+        : getWeatherByCoords(query.value.lat, query.value.lon)
+
+    promise
       .then((d) => { if (!cancelled) setData(d) })
       .catch((e) => { if (!cancelled) setError(e) })
       .finally(() => { if (!cancelled) setLoading(false) })
 
     return () => { cancelled = true }
-  }, [city])
+  }, [query])
+
+  const handleSearch = (cityName) => {
+    setQuery({ type: 'city', value: cityName })
+  }
+
+  const handleUseLocation = async () => {
+    try {
+      const coords = await geo.getLocation()
+      setQuery({ type: 'coords', value: coords })
+    } catch (geoError) {
+      // Erros do hook (permissão negada, timeout, etc.) entram no estado geral
+      // pra usar o mesmo ErrorState que erros de rede.
+      setError(geoError)
+    }
+  }
 
   return (
     <main className="mx-auto max-w-6xl px-5 lg:px-8 py-10 space-y-8">
@@ -38,7 +62,11 @@ function App() {
         <h1 className="font-serif text-4xl tracking-tight text-ink shrink-0">
           Skytime
         </h1>
-        <SearchBar onSearch={setCity} />
+        <SearchBar
+          onSearch={handleSearch}
+          onUseLocation={handleUseLocation}
+          isLocating={geo.loading}
+        />
       </header>
 
       {loading && <LoadingState />}
