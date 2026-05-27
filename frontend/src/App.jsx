@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Loader2 } from 'lucide-react'
 
 import AtmosphericPanel from './components/AtmosphericPanel'
@@ -7,6 +7,7 @@ import HourlyForecast from './components/HourlyForecast'
 import WeatherCard from './components/WeatherCard'
 import WhatToWearCard from './components/WhatToWearCard'
 import { getWeather } from './services/weather'
+import { buildDailySummary } from './utils/dailySummary'
 
 const DEFAULT_CITY = 'São Paulo'
 
@@ -36,23 +37,45 @@ function App() {
 
       {loading && <LoadingState />}
       {error && !loading && <ErrorState error={error} />}
-      {data && !loading && !error && (
-        <>
-          {/* Zona 1: WeatherCard + AtmosphericPanel lado a lado em desktop. */}
-          <div className="grid gap-6 lg:grid-cols-2">
-            <WeatherCard location={data.location} current={data.current} />
-            <AtmosphericPanel location={data.location} current={data.current} />
-          </div>
-
-          {/* Zona 2: features editoriais. */}
-          <WhatToWearCard today={data.daily[0]} />
-
-          {/* Strip horária + previsão dos próximos dias. */}
-          <HourlyForecast hourly={data.hourly} currentTime={data.current.time} />
-          <DailyForecast daily={data.daily} />
-        </>
-      )}
+      {data && !loading && !error && <Dashboard data={data} />}
     </main>
+  )
+}
+
+function Dashboard({ data }) {
+  // Frase editorial sobre o dia inteiro, reutilizada em dois lugares
+  // (no AtmosphericPanel em desktop e como texto solto em mobile).
+  const summary = useMemo(
+    () => buildDailySummary(data.hourly, data.daily[0]),
+    [data],
+  )
+
+  return (
+    <>
+      {/* Zona 1: WeatherCard + AtmosphericPanel lado a lado em desktop. */}
+      <div className="grid gap-6 lg:grid-cols-2">
+        <WeatherCard location={data.location} current={data.current} />
+        <AtmosphericPanel
+          location={data.location}
+          current={data.current}
+          summary={summary}
+        />
+      </div>
+
+      {/* Resumo do dia em mobile (no desktop ele vive dentro do AtmosphericPanel). */}
+      {summary && (
+        <p className="lg:hidden font-serif italic text-ink/75 text-lg tracking-tight leading-snug -mt-2 px-1">
+          {summary}
+        </p>
+      )}
+
+      {/* Zona 2: features editoriais. */}
+      <WhatToWearCard today={data.daily[0]} />
+
+      {/* Strip horária + previsão dos próximos dias. */}
+      <HourlyForecast hourly={data.hourly} currentTime={data.current.time} />
+      <DailyForecast daily={data.daily} />
+    </>
   )
 }
 
