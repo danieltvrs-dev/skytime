@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Loader2 } from 'lucide-react'
 
+import AtmosphericPanel from './components/AtmosphericPanel'
 import DailyForecast from './components/DailyForecast'
 import HourlyForecast from './components/HourlyForecast'
 import WeatherCard from './components/WeatherCard'
@@ -27,7 +28,7 @@ function App() {
   }, [])
 
   return (
-    <main className="mx-auto max-w-md px-5 py-10 space-y-8">
+    <main className="mx-auto max-w-6xl px-5 lg:px-8 py-10 space-y-8">
       <header>
         <h1 className="font-serif text-4xl tracking-tight text-ink">Skytime</h1>
       </header>
@@ -35,11 +36,17 @@ function App() {
       {loading && <LoadingState />}
       {error && !loading && <ErrorState error={error} />}
       {data && !loading && !error && (
-        <div className="space-y-6">
-          <WeatherCard location={data.location} current={data.current} />
+        <>
+          {/* Zona 1: WeatherCard + AtmosphericPanel lado a lado em desktop. */}
+          <div className="grid gap-6 lg:grid-cols-2">
+            <WeatherCard location={data.location} current={data.current} />
+            <AtmosphericPanel location={data.location} current={data.current} />
+          </div>
+
+          {/* Zonas 2 e 3: full-width abaixo, descem no gradiente. */}
           <HourlyForecast hourly={data.hourly} currentTime={data.current.time} />
           <DailyForecast daily={data.daily} />
-        </div>
+        </>
       )}
     </main>
   )
