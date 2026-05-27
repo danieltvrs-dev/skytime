@@ -2,16 +2,17 @@ import { getWeatherIcon } from '../utils/weatherIcons'
 import { formatDailyLabel } from '../utils/dateFormat'
 
 /**
- * Lista vertical com a previsão dos próximos dias.
- * Espera o array `daily` no formato vindo do backend, onde daily[0] é hoje.
+ * Previsão dos próximos dias — Zona 3 (editorial) da jornada.
+ * Card sólido escuro (ink sobre graphite do fundo), texto paper.
+ * Densidade editorial: linhas separadas por divisores sutis, máxima com mais peso que mínima.
  */
 export default function DailyForecast({ daily }) {
   return (
-    <section className="bg-white/10 backdrop-blur-md rounded-3xl p-6 border border-white/20 text-white">
-      <h3 className="text-xs font-medium text-white/70 mb-4 uppercase tracking-wider">
+    <section className="rounded-3xl p-6 bg-ink text-paper border border-paper/10 shadow-md">
+      <h3 className="text-[11px] font-medium text-paper/50 mb-5 tracking-[0.14em] uppercase">
         Próximos dias
       </h3>
-      <ul className="divide-y divide-white/10">
+      <ul className="divide-y divide-paper/10">
         {daily.map((day, index) => (
           <DailyRow key={day.date} day={day} isToday={index === 0} />
         ))}
@@ -25,17 +26,27 @@ function DailyRow({ day, isToday }) {
   const label = isToday ? 'Hoje' : formatDailyLabel(day.date)
 
   return (
-    <li className="flex items-center gap-4 py-3">
-      <span className="w-20 font-medium text-sm">{label}</span>
+    <li className="flex items-center gap-4 py-3.5">
+      <span
+        className={`w-20 text-sm ${
+          isToday ? 'font-serif italic text-amber' : 'font-medium text-paper'
+        }`}
+      >
+        {label}
+      </span>
       <Icon
-        className="w-6 h-6 shrink-0"
+        className="w-6 h-6 shrink-0 text-paper/80"
         strokeWidth={1.5}
         aria-label={day.description}
       />
       <span className="flex-1" />
       <span className="text-sm tabular-nums">
-        <span className="font-medium">{Math.round(day.temperature_max)}°</span>
-        <span className="text-white/60 ml-3">{Math.round(day.temperature_min)}°</span>
+        <span className="font-medium text-paper">
+          {Math.round(day.temperature_max)}°
+        </span>
+        <span className="text-paper/50 ml-3">
+          {Math.round(day.temperature_min)}°
+        </span>
       </span>
     </li>
   )
