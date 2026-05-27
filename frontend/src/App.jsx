@@ -5,6 +5,7 @@ import AtmosphericPanel from './components/AtmosphericPanel'
 import DailyForecast from './components/DailyForecast'
 import HourlyForecast from './components/HourlyForecast'
 import WeatherCard from './components/WeatherCard'
+import WhatToWearCard from './components/WhatToWearCard'
 import { getWeather } from './services/weather'
 
 const DEFAULT_CITY = 'São Paulo'
@@ -43,7 +44,10 @@ function App() {
             <AtmosphericPanel location={data.location} current={data.current} />
           </div>
 
-          {/* Zonas 2 e 3: full-width abaixo, descem no gradiente. */}
+          {/* Zona 2: features editoriais. */}
+          <WhatToWearCard today={data.daily[0]} />
+
+          {/* Strip horária + previsão dos próximos dias. */}
           <HourlyForecast hourly={data.hourly} currentTime={data.current.time} />
           <DailyForecast daily={data.daily} />
         </>
