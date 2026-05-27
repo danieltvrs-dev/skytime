@@ -2,8 +2,8 @@ import { Droplets, Thermometer, Wind } from 'lucide-react'
 import { getWeatherIcon } from '../utils/weatherIcons'
 
 /**
- * Card visual com o clima atual de uma localização.
- * Sem lógica de fetch: recebe dados prontos por props.
+ * Card do clima atual — Zona 1 da jornada Hora Dourada.
+ * Tom atmosférico, base clara, tipografia editorial (Fraunces no número grande).
  *
  * Props:
  *   location: { name, country, admin1?, ... }
@@ -11,26 +11,35 @@ import { getWeatherIcon } from '../utils/weatherIcons'
  */
 export default function WeatherCard({ location, current }) {
   const Icon = getWeatherIcon(current.icon)
-  const region = location.admin1 ? `${location.admin1}, ${location.country}` : location.country
+  const region = location.admin1
+    ? `${location.admin1}, ${location.country}`
+    : location.country
 
   return (
-    <article className="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20 text-white shadow-xl">
-      <header className="flex items-start justify-between mb-6">
+    <article className="rounded-3xl p-8 bg-white/55 backdrop-blur-sm border border-ink/5 shadow-sm">
+      <header className="flex items-start justify-between gap-4 mb-8">
         <div>
-          <h2 className="text-2xl font-medium leading-tight">{location.name}</h2>
-          <p className="text-white/70 text-sm">{region}</p>
+          <h2 className="font-serif text-3xl text-ink leading-none tracking-tight">
+            {location.name}
+          </h2>
+          <p className="text-ink/55 text-sm mt-1.5">{region}</p>
         </div>
-        <Icon className="w-20 h-20 shrink-0" strokeWidth={1.5} aria-hidden="true" />
+        <Icon
+          className="w-14 h-14 shrink-0 text-ink/75"
+          strokeWidth={1.25}
+          aria-hidden="true"
+        />
       </header>
 
-      <div className="mb-6">
-        <p className="text-7xl font-light tracking-tight">
-          {Math.round(current.temperature)}°
+      <div className="mb-8">
+        <p className="font-serif text-ink tracking-tight leading-none text-8xl">
+          {Math.round(current.temperature)}
+          <span className="text-amber">°</span>
         </p>
-        <p className="text-white/80 mt-1">{current.description}</p>
+        <p className="text-ink/70 mt-3 text-base">{current.description}</p>
       </div>
 
-      <dl className="grid grid-cols-3 gap-4 pt-6 border-t border-white/20">
+      <dl className="grid grid-cols-3 gap-4 pt-6 border-t border-ink/10">
         <Stat
           icon={Thermometer}
           label="Sensação"
@@ -53,10 +62,10 @@ export default function WeatherCard({ location, current }) {
 
 function Stat({ icon: Icon, label, value }) {
   return (
-    <div className="flex flex-col items-center text-center">
-      <Icon className="w-5 h-5 mb-1 text-white/70" strokeWidth={1.5} aria-hidden="true" />
-      <dt className="text-white/60 text-xs">{label}</dt>
-      <dd className="font-medium">{value}</dd>
+    <div className="flex flex-col items-start gap-1.5">
+      <Icon className="w-4 h-4 text-ink/45" strokeWidth={1.5} aria-hidden="true" />
+      <dt className="text-ink/55 text-[11px] uppercase tracking-wider">{label}</dt>
+      <dd className="font-medium text-ink tabular-nums">{value}</dd>
     </div>
   )
 }

@@ -27,29 +27,27 @@ function App() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-400 via-blue-500 to-indigo-700 flex flex-col items-center px-4 py-12">
-      <main className="w-full max-w-md">
-        <h1 className="text-white text-3xl font-bold mb-6 tracking-tight">
-          Skytime
-        </h1>
+    <main className="mx-auto max-w-md px-5 py-10 space-y-8">
+      <header>
+        <h1 className="font-serif text-4xl tracking-tight text-ink">Skytime</h1>
+      </header>
 
-        {loading && <LoadingState />}
-        {error && !loading && <ErrorState error={error} />}
-        {data && !loading && !error && (
-          <div className="space-y-6">
-            <WeatherCard location={data.location} current={data.current} />
-            <HourlyForecast hourly={data.hourly} currentTime={data.current.time} />
-            <DailyForecast daily={data.daily} />
-          </div>
-        )}
-      </main>
-    </div>
+      {loading && <LoadingState />}
+      {error && !loading && <ErrorState error={error} />}
+      {data && !loading && !error && (
+        <div className="space-y-6">
+          <WeatherCard location={data.location} current={data.current} />
+          <HourlyForecast hourly={data.hourly} currentTime={data.current.time} />
+          <DailyForecast daily={data.daily} />
+        </div>
+      )}
+    </main>
   )
 }
 
 function LoadingState() {
   return (
-    <div className="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20 text-white/80 flex items-center justify-center gap-3">
+    <div className="flex items-center gap-3 text-ink/60">
       <Loader2 className="w-5 h-5 animate-spin" aria-hidden="true" />
       <span>Carregando clima...</span>
     </div>
@@ -58,13 +56,12 @@ function LoadingState() {
 
 function ErrorState({ error }) {
   // FastAPI devolve { detail: "..." } em HTTPException; axios coloca em response.data.
-  // Se nem chegou no servidor (rede, CORS, timeout), cai em error.message.
   const detail = error.response?.data?.detail || error.message || 'Erro desconhecido'
 
   return (
-    <div className="bg-red-500/20 backdrop-blur-md rounded-3xl p-8 border border-red-400/40 text-white">
-      <p className="font-medium">Não foi possível carregar o clima.</p>
-      <p className="text-white/80 text-sm mt-2">{detail}</p>
+    <div className="rounded-2xl p-6 bg-ink/5 border border-ink/10">
+      <p className="font-medium text-ink">Não foi possível carregar o clima.</p>
+      <p className="text-ink/60 text-sm mt-2">{detail}</p>
     </div>
   )
 }
