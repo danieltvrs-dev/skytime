@@ -34,6 +34,7 @@ class HourlyPoint(BaseModel):
     temperature: float
     weather_code: int
     icon: str
+    precipitation_probability: int | None = None
 
 
 class DailyPoint(BaseModel):
@@ -45,6 +46,12 @@ class DailyPoint(BaseModel):
     weather_code: int
     description: str
     icon: str
+    uv_index_max: float | None = None
+    precipitation_probability_max: int | None = None
+    # sunrise/sunset vêm como string "YYYY-MM-DDTHH:MM" no fuso da cidade.
+    # Mantidos como str pra evitar parsing de datetime sem segundos.
+    sunrise: str | None = None
+    sunset: str | None = None
 
 
 class ForecastData(BaseModel):

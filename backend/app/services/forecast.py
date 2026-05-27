@@ -31,8 +31,20 @@ _CURRENT_VARS = [
     "wind_speed_10m",
     "weather_code",
 ]
-_HOURLY_VARS = ["temperature_2m", "weather_code"]
-_DAILY_VARS = ["temperature_2m_max", "temperature_2m_min", "weather_code"]
+_HOURLY_VARS = [
+    "temperature_2m",
+    "weather_code",
+    "precipitation_probability",
+]
+_DAILY_VARS = [
+    "temperature_2m_max",
+    "temperature_2m_min",
+    "weather_code",
+    "uv_index_max",
+    "precipitation_probability_max",
+    "sunrise",
+    "sunset",
+]
 
 
 class ForecastServiceError(Exception):
@@ -97,8 +109,11 @@ def _parse(data: dict) -> ForecastData:
 
     hourly = data["hourly"]
     hourly_points: list[HourlyPoint] = []
-    for time, temp, code in zip(
-        hourly["time"], hourly["temperature_2m"], hourly["weather_code"]
+    for time, temp, code, prob in zip(
+        hourly["time"],
+        hourly["temperature_2m"],
+        hourly["weather_code"],
+        hourly["precipitation_probability"],
     ):
         _, icon = describe(int(code))
         hourly_points.append(
@@ -107,16 +122,21 @@ def _parse(data: dict) -> ForecastData:
                 temperature=temp,
                 weather_code=int(code),
                 icon=icon,
+                precipitation_probability=int(prob) if prob is not None else None,
             )
         )
 
     daily = data["daily"]
     daily_points: list[DailyPoint] = []
-    for d, tmax, tmin, code in zip(
+    for d, tmax, tmin, code, uv, prcp, sun_rise, sun_set in zip(
         daily["time"],
         daily["temperature_2m_max"],
         daily["temperature_2m_min"],
         daily["weather_code"],
+        daily["uv_index_max"],
+        daily["precipitation_probability_max"],
+        daily["sunrise"],
+        daily["sunset"],
     ):
         desc, icon = describe(int(code))
         daily_points.append(
@@ -127,6 +147,10 @@ def _parse(data: dict) -> ForecastData:
                 weather_code=int(code),
                 description=desc,
                 icon=icon,
+                uv_index_max=uv,
+                precipitation_probability_max=int(prcp) if prcp is not None else None,
+                sunrise=sun_rise,
+                sunset=sun_set,
             )
         )
 
