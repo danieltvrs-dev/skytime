@@ -1,6 +1,35 @@
 @import "tailwindcss";
 
+/* ---------------------------------------------------------------------------
+ * Design tokens do Skytime — paleta "Hora Dourada"
+ *
+ * Conceito espacial: jornada vertical do off-white quente (topo, atmosférico)
+ * até o grafite (rodapé, editorial), com âmbar como único acento cromático.
+ * Os utilitários do Tailwind herdam essas variáveis via @theme.
+ * ------------------------------------------------------------------------- */
+@theme {
+  /* Cores da paleta */
+  --color-cream: #F5F1EA;        /* topo, base atmosférica */
+  --color-sand: #8B7F70;         /* meio, transição */
+  --color-graphite: #1A1714;     /* rodapé, base editorial */
+  --color-amber: #D9A55B;        /* acento único */
+  --color-ink: #1F1A14;          /* texto sobre claro */
+  --color-paper: #EFE9DC;        /* texto sobre escuro */
+
+  /* Famílias tipográficas */
+  --font-serif: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
 html, body, #root {
   height: 100%;
   margin: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-ink);
+  background: var(--color-cream);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
