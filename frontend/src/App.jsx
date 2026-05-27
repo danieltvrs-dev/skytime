@@ -5,6 +5,7 @@ import AtmosphericPanel from './components/AtmosphericPanel'
 import DailyForecast from './components/DailyForecast'
 import GoldenHourCard from './components/GoldenHourCard'
 import HourlyForecast from './components/HourlyForecast'
+import SearchBar from './components/SearchBar'
 import WeatherCard from './components/WeatherCard'
 import WhatToWearCard from './components/WhatToWearCard'
 import { getWeather } from './services/weather'
@@ -13,6 +14,7 @@ import { buildDailySummary } from './utils/dailySummary'
 const DEFAULT_CITY = 'São Paulo'
 
 function App() {
+  const [city, setCity] = useState(DEFAULT_CITY)
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -22,18 +24,21 @@ function App() {
     setLoading(true)
     setError(null)
 
-    getWeather(DEFAULT_CITY)
+    getWeather(city)
       .then((d) => { if (!cancelled) setData(d) })
       .catch((e) => { if (!cancelled) setError(e) })
       .finally(() => { if (!cancelled) setLoading(false) })
 
     return () => { cancelled = true }
-  }, [])
+  }, [city])
 
   return (
     <main className="mx-auto max-w-6xl px-5 lg:px-8 py-10 space-y-8">
-      <header>
-        <h1 className="font-serif text-4xl tracking-tight text-ink">Skytime</h1>
+      <header className="flex flex-col gap-4 lg:flex-row lg:items-center lg:gap-8">
+        <h1 className="font-serif text-4xl tracking-tight text-ink shrink-0">
+          Skytime
+        </h1>
+        <SearchBar onSearch={setCity} />
       </header>
 
       {loading && <LoadingState />}
