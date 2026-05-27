@@ -3,6 +3,7 @@ import { Loader2 } from 'lucide-react'
 
 import AtmosphericPanel from './components/AtmosphericPanel'
 import DailyForecast from './components/DailyForecast'
+import GoldenHourCard from './components/GoldenHourCard'
 import HourlyForecast from './components/HourlyForecast'
 import WeatherCard from './components/WeatherCard'
 import WhatToWearCard from './components/WhatToWearCard'
@@ -69,8 +70,11 @@ function Dashboard({ data }) {
         </p>
       )}
 
-      {/* Zona 2: features editoriais. */}
-      <WhatToWearCard today={data.daily[0]} />
+      {/* Zona 2: features editoriais lado a lado em desktop. */}
+      <div className="grid gap-6 lg:grid-cols-2">
+        <WhatToWearCard today={data.daily[0]} />
+        <GoldenHourCard today={data.daily[0]} />
+      </div>
 
       {/* Strip horária + previsão dos próximos dias. */}
       <HourlyForecast hourly={data.hourly} currentTime={data.current.time} />
