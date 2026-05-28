@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { CloudOff, RotateCw } from 'lucide-react'
 
 import AtmosphericPanel from './components/AtmosphericPanel'
 import CityMap from './components/CityMap'
@@ -31,9 +32,10 @@ function App() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [history, setHistory] = useState([])
-  // Incrementa toda vez que o histórico precisa ser revalidado
-  // (carga inicial, após nova busca, após delete).
+  // Incrementa toda vez que o histórico precisa ser revalidado.
   const [historyVersion, setHistoryVersion] = useState(0)
+  // Incrementa quando o usuário clica "tentar de novo" depois de um erro.
+  const [retryTick, setRetryTick] = useState(0)
   const geo = useGeolocation()
 
   useEffect(() => {
@@ -50,7 +52,6 @@ function App() {
       .then((d) => {
         if (!cancelled) {
           setData(d)
-          // Backend registrou a busca; pede pro histórico se atualizar.
           setHistoryVersion((v) => v + 1)
         }
       })
@@ -58,7 +59,7 @@ function App() {
       .finally(() => { if (!cancelled) setLoading(false) })
 
     return () => { cancelled = true }
-  }, [query])
+  }, [query, retryTick])
 
   useEffect(() => {
     let cancelled = false
@@ -112,7 +113,12 @@ function App() {
       />
 
       {loading && <SkeletonDashboard />}
-      {error && !loading && <ErrorState error={error} />}
+      {error && !loading && (
+        <ErrorState
+          error={error}
+          onRetry={() => setRetryTick((t) => t + 1)}
+        />
+      )}
       {data && !loading && !error && (
         <Dashboard
           data={data}
@@ -176,14 +182,31 @@ function Dashboard({ data }) {
   )
 }
 
-function ErrorState({ error }) {
+function ErrorState({ error, onRetry }) {
   // FastAPI devolve { detail: "..." } em HTTPException; axios coloca em response.data.
   const detail = error.response?.data?.detail || error.message || 'Erro desconhecido'
 
   return (
-    <div className="rounded-2xl p-6 bg-ink/5 border border-ink/10">
-      <p className="font-medium text-ink">Não foi possível carregar o clima.</p>
-      <p className="text-ink/60 text-sm mt-2">{detail}</p>
+    <div className="rounded-3xl p-10 bg-white/55 backdrop-blur-sm border border-ink/10 shadow-sm flex flex-col items-center text-center max-w-lg mx-auto">
+      <CloudOff
+        className="w-12 h-12 text-ink/30 mb-5"
+        strokeWidth={1.25}
+        aria-hidden="true"
+      />
+      <p className="font-serif italic text-2xl text-ink/80 leading-snug">
+        O céu não respondeu.
+      </p>
+      <p className="text-ink/60 text-sm mt-3 max-w-sm">{detail}</p>
+      {onRetry && (
+        <button
+          type="button"
+          onClick={onRetry}
+          className="mt-6 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-ink text-paper text-sm font-medium hover:bg-ink/85 transition"
+        >
+          <RotateCw className="w-4 h-4" strokeWidth={2} aria-hidden="true" />
+          Tentar de novo
+        </button>
+      )}
     </div>
   )
 }
