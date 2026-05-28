@@ -2,9 +2,11 @@ import { useEffect, useMemo, useState } from 'react'
 import { Loader2 } from 'lucide-react'
 
 import AtmosphericPanel from './components/AtmosphericPanel'
+import CityMap from './components/CityMap'
 import DailyForecast from './components/DailyForecast'
 import GoldenHourCard from './components/GoldenHourCard'
 import HourlyForecast from './components/HourlyForecast'
+import RainTimeline from './components/RainTimeline'
 import SearchBar from './components/SearchBar'
 import SearchHistory from './components/SearchHistory'
 import WeatherCard from './components/WeatherCard'
@@ -151,6 +153,19 @@ function Dashboard({ data }) {
       {/* Strip horária + previsão dos próximos dias. */}
       <HourlyForecast hourly={data.hourly} currentTime={data.current.time} />
       <DailyForecast daily={data.daily} />
+
+      {/* Zona 3 (editorial dark): mapa da cidade + timeline de chuva. */}
+      <div className="grid gap-6 lg:grid-cols-2">
+        <CityMap
+          latitude={data.location.latitude}
+          longitude={data.location.longitude}
+          cityName={data.location.name}
+        />
+        <RainTimeline
+          hourly={data.hourly}
+          currentTime={data.current.time}
+        />
+      </div>
     </>
   )
 }
