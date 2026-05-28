@@ -19,3 +19,18 @@ export async function getWeatherByCoords(lat, lon) {
   const { data } = await api.get('/weather/by-coords', { params: { lat, lon } })
   return data
 }
+
+/**
+ * Lista as últimas cidades pesquisadas, ordenadas por mais recente.
+ */
+export async function getHistory(limit = 10) {
+  const { data } = await api.get('/history', { params: { limit } })
+  return data
+}
+
+/**
+ * Remove uma entrada do histórico pelo ID.
+ */
+export async function deleteHistoryEntry(id) {
+  await api.delete(`/history/${id}`)
+}
