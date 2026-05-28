@@ -1,19 +1,22 @@
 import { Droplets, Thermometer, Wind } from 'lucide-react'
 import { getWeatherIcon } from '../utils/weatherIcons'
+import { useRelativeTime } from '../hooks/useRelativeTime'
 
 /**
  * Card do clima atual — Zona 1 da jornada Hora Dourada.
  * Tom atmosférico, base clara, tipografia editorial (Fraunces no número grande).
  *
  * Props:
- *   location: { name, country, admin1?, ... }
- *   current:  { temperature, apparent_temperature, humidity, wind_speed, description, icon }
+ *   location:  { name, country, admin1?, ... }
+ *   current:   { temperature, apparent_temperature, humidity, wind_speed, description, icon }
+ *   fetchedAt: timestamp (ms) de quando o frontend recebeu esses dados
  */
-export default function WeatherCard({ location, current }) {
+export default function WeatherCard({ location, current, fetchedAt }) {
   const Icon = getWeatherIcon(current.icon)
   const region = location.admin1
     ? `${location.admin1}, ${location.country}`
     : location.country
+  const relativeTime = useRelativeTime(fetchedAt)
 
   return (
     <article className="rounded-3xl p-8 bg-white/55 backdrop-blur-sm border border-ink/5 shadow-sm">
@@ -37,6 +40,11 @@ export default function WeatherCard({ location, current }) {
           <span className="text-amber">°</span>
         </p>
         <p className="text-ink/70 mt-3 text-base">{current.description}</p>
+        {relativeTime && (
+          <p className="text-ink/40 text-xs mt-2">
+            atualizado {relativeTime}
+          </p>
+        )}
       </div>
 
       <dl className="grid grid-cols-3 gap-4 pt-6 border-t border-ink/10">

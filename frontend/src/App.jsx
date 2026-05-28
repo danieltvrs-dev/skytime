@@ -29,6 +29,7 @@ function App() {
   // Um useEffect decide qual endpoint chamar baseado nisso.
   const [query, setQuery] = useState(DEFAULT_QUERY)
   const [data, setData] = useState(null)
+  const [fetchedAt, setFetchedAt] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [history, setHistory] = useState([])
@@ -52,6 +53,7 @@ function App() {
       .then((d) => {
         if (!cancelled) {
           setData(d)
+          setFetchedAt(Date.now())
           setHistoryVersion((v) => v + 1)
         }
       })
@@ -122,6 +124,7 @@ function App() {
       {data && !loading && !error && (
         <Dashboard
           data={data}
+          fetchedAt={fetchedAt}
           // Key força remontagem (e reexecução das animações)
           // a cada troca de cidade.
           key={`${data.location.name}-${data.location.latitude}`}
@@ -131,7 +134,7 @@ function App() {
   )
 }
 
-function Dashboard({ data }) {
+function Dashboard({ data, fetchedAt }) {
   // Frase editorial sobre o dia inteiro, reutilizada em dois lugares
   // (no AtmosphericPanel em desktop e como texto solto em mobile).
   const summary = useMemo(
@@ -143,7 +146,11 @@ function Dashboard({ data }) {
     <div className="animate-stagger space-y-8">
       {/* Zona 1: WeatherCard + AtmosphericPanel lado a lado em desktop. */}
       <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
-        <WeatherCard location={data.location} current={data.current} />
+        <WeatherCard
+          location={data.location}
+          current={data.current}
+          fetchedAt={fetchedAt}
+        />
         <AtmosphericPanel current={data.current} summary={summary} />
       </div>
 
