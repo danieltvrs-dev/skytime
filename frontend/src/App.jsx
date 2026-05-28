@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Loader2 } from 'lucide-react'
 
 import AtmosphericPanel from './components/AtmosphericPanel'
 import CityMap from './components/CityMap'
@@ -10,6 +9,7 @@ import HourlyForecast from './components/HourlyForecast'
 import RainTimeline from './components/RainTimeline'
 import SearchBar from './components/SearchBar'
 import SearchHistory from './components/SearchHistory'
+import SkeletonDashboard from './components/SkeletonDashboard'
 import WeatherCard from './components/WeatherCard'
 import WhatToWearCard from './components/WhatToWearCard'
 import { useGeolocation } from './hooks/useGeolocation'
@@ -111,7 +111,7 @@ function App() {
         onDelete={handleDeleteHistoryEntry}
       />
 
-      {loading && <LoadingState />}
+      {loading && <SkeletonDashboard />}
       {error && !loading && <ErrorState error={error} />}
       {data && !loading && !error && <Dashboard data={data} />}
     </main>
@@ -166,15 +166,6 @@ function Dashboard({ data }) {
 
       <Footer />
     </>
-  )
-}
-
-function LoadingState() {
-  return (
-    <div className="flex items-center gap-3 text-ink/60">
-      <Loader2 className="w-5 h-5 animate-spin" aria-hidden="true" />
-      <span>Carregando clima...</span>
-    </div>
   )
 }
 
