@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routes import weather
+from app.routes import history, weather
 
 # Origens autorizadas a chamar a API a partir do navegador.
 # Em produção, adicionar o domínio do frontend hospedado.
@@ -25,6 +25,7 @@ app.add_middleware(
 )
 
 app.include_router(weather.router)
+app.include_router(history.router)
 
 
 @app.get("/")
