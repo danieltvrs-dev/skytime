@@ -130,11 +130,7 @@ function Dashboard({ data }) {
       {/* Zona 1: WeatherCard + AtmosphericPanel lado a lado em desktop. */}
       <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
         <WeatherCard location={data.location} current={data.current} />
-        <AtmosphericPanel
-          location={data.location}
-          current={data.current}
-          summary={summary}
-        />
+        <AtmosphericPanel current={data.current} summary={summary} />
       </div>
 
       {/* Resumo do dia em mobile (no desktop ele vive dentro do AtmosphericPanel). */}
