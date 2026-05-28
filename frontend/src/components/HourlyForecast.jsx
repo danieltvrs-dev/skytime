@@ -15,8 +15,8 @@ export default function HourlyForecast({ hourly, currentTime }) {
   const next = hourly.slice(startIndex, startIndex + HOURS_TO_SHOW)
 
   return (
-    <section className="rounded-3xl p-6 bg-white/45 backdrop-blur-sm border border-ink/5 shadow-sm">
-      <h3 className="text-[11px] font-medium text-ink/55 mb-5 tracking-[0.14em] uppercase">
+    <section className="rounded-3xl px-6 py-4 bg-white/45 backdrop-blur-sm border border-ink/5 shadow-sm">
+      <h3 className="text-[11px] font-medium text-ink/55 mb-3 tracking-[0.14em] uppercase">
         Próximas horas
       </h3>
       <div className="overflow-x-auto -mx-6 px-6 pb-1">
@@ -35,20 +35,20 @@ function HourPoint({ hour, isNow }) {
   const label = isNow ? 'Agora' : formatHour(hour.time)
 
   return (
-    <li className="flex flex-col items-center min-w-12">
+    <li className="flex flex-col items-center min-w-12 gap-1.5">
       <span
-        className={`text-xs mb-2 tabular-nums ${
+        className={`text-xs tabular-nums ${
           isNow ? 'text-amber font-medium' : 'text-ink/55'
         }`}
       >
         {label}
       </span>
       <Icon
-        className="w-6 h-6 mb-2 text-ink/75"
+        className="w-5 h-5 text-ink/75"
         strokeWidth={1.5}
         aria-hidden="true"
       />
-      <span className="font-medium text-ink tabular-nums">
+      <span className="text-sm font-medium text-ink tabular-nums">
         {Math.round(hour.temperature)}°
       </span>
     </li>
