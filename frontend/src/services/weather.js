@@ -21,6 +21,17 @@ export async function getWeatherByCoords(lat, lon) {
 }
 
 /**
+ * Devolve até `count` sugestões de cidades que casam com o trecho digitado.
+ * Usado pelo autocomplete da SearchBar.
+ */
+export async function geocodeSuggestions(query, count = 5) {
+  const { data } = await api.get('/weather/geocode/suggest', {
+    params: { city: query, count },
+  })
+  return data
+}
+
+/**
  * Lista as últimas cidades pesquisadas, ordenadas por mais recente.
  */
 export async function getHistory(limit = 10) {

@@ -12,6 +12,7 @@ from app.services.geocoding import (
     CityNotFoundError,
     GeocodingServiceError,
     geocode,
+    geocode_suggest,
     reverse_geocode,
 )
 from app.services.history import record_search
@@ -41,6 +42,20 @@ async def geocode_city(
         return await geocode(city)
     except CityNotFoundError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except GeocodingServiceError as exc:
+        raise HTTPException(
+            status_code=502, detail="Serviço de geocoding indisponível."
+        ) from exc
+
+
+@router.get("/geocode/suggest", response_model=list[GeocodingResult])
+async def geocode_suggestions(
+    city: str = Query(..., min_length=1, description="Trecho do nome a buscar"),
+    count: int = Query(5, ge=1, le=10, description="Quantidade máxima de sugestões"),
+) -> list[GeocodingResult]:
+    """Devolve uma lista de cidades que casam com o trecho (autocomplete)."""
+    try:
+        return await geocode_suggest(city, count=count)
     except GeocodingServiceError as exc:
         raise HTTPException(
             status_code=502, detail="Serviço de geocoding indisponível."

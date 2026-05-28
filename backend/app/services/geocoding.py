@@ -81,6 +81,44 @@ async def geocode(city: str) -> GeocodingResult:
     return result
 
 
+async def geocode_suggest(
+    city: str, count: int = 5
+) -> list[GeocodingResult]:
+    """Retorna até `count` cidades cujo nome casa com a busca (autocomplete).
+
+    Diferente de `geocode`, não cacheia: o usuário digitando muda o resultado
+    a cada tecla. Não levanta CityNotFoundError; lista vazia é resposta válida.
+    """
+    params = {
+        "name": city,
+        "count": max(1, min(count, 10)),
+        "language": "pt",
+        "format": "json",
+    }
+    try:
+        async with httpx.AsyncClient(timeout=TIMEOUT_SECONDS) as client:
+            response = await client.get(GEOCODING_URL, params=params)
+            response.raise_for_status()
+            data = response.json()
+    except httpx.HTTPError as exc:
+        raise GeocodingServiceError(
+            f"Falha ao consultar geocoding: {exc}"
+        ) from exc
+
+    results = data.get("results") or []
+    return [
+        GeocodingResult(
+            name=item["name"],
+            country=item.get("country", ""),
+            latitude=item["latitude"],
+            longitude=item["longitude"],
+            admin1=item.get("admin1"),
+            timezone=item.get("timezone"),
+        )
+        for item in results
+    ]
+
+
 async def reverse_geocode(latitude: float, longitude: float) -> GeocodingResult:
     """Resolve coordenadas em nome de cidade via Nominatim (OpenStreetMap).
 
