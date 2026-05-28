@@ -128,7 +128,7 @@ function Dashboard({ data }) {
   return (
     <>
       {/* Zona 1: WeatherCard + AtmosphericPanel lado a lado em desktop. */}
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
         <WeatherCard location={data.location} current={data.current} />
         <AtmosphericPanel
           location={data.location}
@@ -145,7 +145,7 @@ function Dashboard({ data }) {
       )}
 
       {/* Zona 2: features editoriais lado a lado em desktop. */}
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
         <WhatToWearCard today={data.daily[0]} />
         <GoldenHourCard today={data.daily[0]} />
       </div>
@@ -155,7 +155,7 @@ function Dashboard({ data }) {
       <DailyForecast daily={data.daily} />
 
       {/* Zona 3 (editorial dark): mapa da cidade + timeline de chuva. */}
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
         <CityMap
           latitude={data.location.latitude}
           longitude={data.location.longitude}
