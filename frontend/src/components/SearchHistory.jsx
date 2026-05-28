@@ -36,15 +36,17 @@ function HistoryChip({ entry, onSelect, onDelete }) {
       <button
         type="button"
         onClick={() => onSelect(entry.city_name)}
-        className="flex items-center gap-1.5 pl-3 pr-1 py-1.5 text-ink"
+        className="flex items-center gap-1.5 pl-3 pr-1 py-1.5 text-ink min-w-0"
         title={`Buscar ${entry.city_name}`}
       >
         <MapPin
-          className="w-3 h-3 text-amber"
+          className="w-3 h-3 text-amber shrink-0"
           strokeWidth={2}
           aria-hidden="true"
         />
-        <span className="font-medium">{entry.city_name}</span>
+        <span className="font-medium truncate max-w-[10rem]">
+          {entry.city_name}
+        </span>
       </button>
       <button
         type="button"
