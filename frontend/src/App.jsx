@@ -113,7 +113,14 @@ function App() {
 
       {loading && <SkeletonDashboard />}
       {error && !loading && <ErrorState error={error} />}
-      {data && !loading && !error && <Dashboard data={data} />}
+      {data && !loading && !error && (
+        <Dashboard
+          data={data}
+          // Key força remontagem (e reexecução das animações)
+          // a cada troca de cidade.
+          key={`${data.location.name}-${data.location.latitude}`}
+        />
+      )}
     </main>
   )
 }
@@ -127,7 +134,7 @@ function Dashboard({ data }) {
   )
 
   return (
-    <>
+    <div className="animate-stagger space-y-8">
       {/* Zona 1: WeatherCard + AtmosphericPanel lado a lado em desktop. */}
       <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
         <WeatherCard location={data.location} current={data.current} />
@@ -165,7 +172,7 @@ function Dashboard({ data }) {
       </div>
 
       <Footer />
-    </>
+    </div>
   )
 }
 
