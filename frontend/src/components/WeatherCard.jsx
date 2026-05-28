@@ -32,7 +32,7 @@ export default function WeatherCard({ location, current }) {
       </header>
 
       <div className="mb-8">
-        <p className="font-serif text-ink tracking-tight leading-none text-8xl">
+        <p className="font-serif text-ink tracking-tight leading-none text-8xl lg:text-9xl">
           {Math.round(current.temperature)}
           <span className="text-amber">°</span>
         </p>
