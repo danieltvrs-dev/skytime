@@ -1,0 +1,33 @@
+# Docker Compose para desenvolvimento local do Skytime.
+# Sobe Postgres 16 e expõe na porta 5432 do host.
+#
+# Uso:
+#   docker compose up -d         # sobe em background
+#   docker compose down          # para e remove o container (dados persistem no volume)
+#   docker compose down -v       # para, remove o container E apaga o volume (zera o banco)
+#   docker compose logs -f       # acompanha logs
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: skytime_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: skytime
+      POSTGRES_PASSWORD: skytime_dev
+      POSTGRES_DB: skytime
+    ports:
+      # Mapeamos pra 5433 do host porque a 5432 já tem outro Postgres
+      # (nativo) rodando. Dentro do container ele continua na 5432.
+      - "5433:5432"
+    volumes:
+      - skytime_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U skytime -d skytime"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  skytime_pgdata:
+    name: skytime_pgdata
