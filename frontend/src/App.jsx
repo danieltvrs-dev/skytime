@@ -4,6 +4,7 @@ import { Loader2 } from 'lucide-react'
 import AtmosphericPanel from './components/AtmosphericPanel'
 import CityMap from './components/CityMap'
 import DailyForecast from './components/DailyForecast'
+import Footer from './components/Footer'
 import GoldenHourCard from './components/GoldenHourCard'
 import HourlyForecast from './components/HourlyForecast'
 import RainTimeline from './components/RainTimeline'
@@ -162,6 +163,8 @@ function Dashboard({ data }) {
           currentTime={data.current.time}
         />
       </div>
+
+      <Footer />
     </>
   )
 }
