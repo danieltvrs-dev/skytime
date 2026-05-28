@@ -25,7 +25,9 @@ export default function RainTimeline({ hourly, currentTime }) {
         Chance de chuva — próximas 12 horas
       </h3>
 
-      {maxProb === 0 ? (
+      {/* Open-Meteo às vezes retorna 1-2% como "ruído" em vez de 0%.
+       * Tratamos qualquer pico abaixo de 5% como "sem chuva pra valer". */}
+      {maxProb < 5 ? (
         <p className="font-serif italic text-paper/60 text-sm">
           Sem chuva prevista nas próximas 12 horas.
         </p>
