@@ -9,13 +9,26 @@
  * Os utilitários do Tailwind herdam essas variáveis via @theme.
  * ------------------------------------------------------------------------- */
 @theme {
-  /* Cores da paleta */
-  --color-cream: #F5F1EA;        /* topo, base atmosférica */
-  --color-sand: #8B7F70;         /* meio, transição */
-  --color-graphite: #1A1714;     /* rodapé, base editorial */
-  --color-amber: #D9A55B;        /* acento único */
-  --color-ink: #1F1A14;          /* texto sobre claro */
-  --color-paper: #EFE9DC;        /* texto sobre escuro */
+  /* Paleta Skytime — Identidade V1.
+   * Azul céu como base, sol âmbar como acento quente, navy pra profundidade.
+   * Cream mantém o fundo respirável e não-clínico. */
+  --color-sky-deep: #0A4DA3;     /* primária — fundo do logo, identidade */
+  --color-sky: #1E5CFF;          /* ação / links */
+  --color-sun: #F9A03F;          /* acento âmbar — sol */
+  --color-navy: #0B1B3D;         /* texto sobre claro / dark mode */
+  --color-cream: #F7F4EE;        /* fundo claro */
+  --color-sky-soft: #BFDBFE;     /* apoio — azul muito claro pra hovers/states */
+
+  /* Aliases legados.
+   * Mantêm os componentes (que usam ink, paper, amber, graphite, sand)
+   * funcionando sem refactor massivo. As cores antigas viram apelidos pra
+   * a nova paleta — basta uma cor da marca aparecer numa classe Tailwind
+   * (ex: text-ink) pro CSS resolver pra navy via var(). */
+  --color-ink: var(--color-navy);
+  --color-paper: var(--color-cream);
+  --color-amber: var(--color-sun);
+  --color-graphite: var(--color-navy);
+  --color-sand: var(--color-sky-soft);
 
   /* Famílias tipográficas */
   --font-serif: "Fraunces", Georgia, "Times New Roman", serif;
