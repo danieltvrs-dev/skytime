@@ -33,6 +33,42 @@ class GeocodingServiceError(Exception):
     """Falha de comunicação com a Open-Meteo (timeout, 5xx, rede)."""
 
 
+def _to_geocoding_result(item: dict) -> GeocodingResult:
+    """Mapeia uma entrada `results[i]` da Open-Meteo no nosso schema."""
+    return GeocodingResult(
+        name=item["name"],
+        country=item.get("country", ""),
+        latitude=item["latitude"],
+        longitude=item["longitude"],
+        admin1=item.get("admin1"),
+        timezone=item.get("timezone"),
+    )
+
+
+async def _fetch_geocoding(name: str, count: int) -> list[GeocodingResult]:
+    """Bate na API e devolve a lista mapeada. Sem cache, sem erros de domínio.
+
+    Pisos e tetos do `count` aqui pra a única chamada externa nunca virar inválida.
+    """
+    params = {
+        "name": name,
+        "count": max(1, min(count, 10)),
+        "language": "pt",
+        "format": "json",
+    }
+    try:
+        async with httpx.AsyncClient(timeout=TIMEOUT_SECONDS) as client:
+            response = await client.get(GEOCODING_URL, params=params)
+            response.raise_for_status()
+            data = response.json()
+    except httpx.HTTPError as exc:
+        raise GeocodingServiceError(
+            f"Falha ao consultar geocoding: {exc}"
+        ) from exc
+
+    return [_to_geocoding_result(item) for item in (data.get("results") or [])]
+
+
 async def geocode(city: str) -> GeocodingResult:
     """Busca a primeira cidade que corresponde ao nome informado.
 
@@ -48,35 +84,11 @@ async def geocode(city: str) -> GeocodingResult:
     if cached is not None:
         return cached
 
-    params = {
-        "name": city,
-        "count": 1,
-        "language": "pt",
-        "format": "json",
-    }
-    try:
-        async with httpx.AsyncClient(timeout=TIMEOUT_SECONDS) as client:
-            response = await client.get(GEOCODING_URL, params=params)
-            response.raise_for_status()
-            data = response.json()
-    except httpx.HTTPError as exc:
-        raise GeocodingServiceError(
-            f"Falha ao consultar geocoding: {exc}"
-        ) from exc
-
-    results = data.get("results") or []
+    results = await _fetch_geocoding(city, count=1)
     if not results:
         raise CityNotFoundError(city)
 
-    top = results[0]
-    result = GeocodingResult(
-        name=top["name"],
-        country=top.get("country", ""),
-        latitude=top["latitude"],
-        longitude=top["longitude"],
-        admin1=top.get("admin1"),
-        timezone=top.get("timezone"),
-    )
+    result = results[0]
     _cache.set(cache_key, result)
     return result
 
@@ -89,34 +101,7 @@ async def geocode_suggest(
     Diferente de `geocode`, não cacheia: o usuário digitando muda o resultado
     a cada tecla. Não levanta CityNotFoundError; lista vazia é resposta válida.
     """
-    params = {
-        "name": city,
-        "count": max(1, min(count, 10)),
-        "language": "pt",
-        "format": "json",
-    }
-    try:
-        async with httpx.AsyncClient(timeout=TIMEOUT_SECONDS) as client:
-            response = await client.get(GEOCODING_URL, params=params)
-            response.raise_for_status()
-            data = response.json()
-    except httpx.HTTPError as exc:
-        raise GeocodingServiceError(
-            f"Falha ao consultar geocoding: {exc}"
-        ) from exc
-
-    results = data.get("results") or []
-    return [
-        GeocodingResult(
-            name=item["name"],
-            country=item.get("country", ""),
-            latitude=item["latitude"],
-            longitude=item["longitude"],
-            admin1=item.get("admin1"),
-            timezone=item.get("timezone"),
-        )
-        for item in results
-    ]
+    return await _fetch_geocoding(city, count=count)
 
 
 async def reverse_geocode(latitude: float, longitude: float) -> GeocodingResult:
