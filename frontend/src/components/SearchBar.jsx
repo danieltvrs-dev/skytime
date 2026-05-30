@@ -20,9 +20,17 @@ export default function SearchBar({ onSearch, onUseLocation, isLocating }) {
   const [suggestions, setSuggestions] = useState([])
   const [isOpen, setIsOpen] = useState(false)
   const containerRef = useRef(null)
+  // Quando o usuário escolhe uma sugestão, preenchemos o input com o nome dela.
+  // Sem esse flag, o useEffect abaixo dispararia outra busca pra exatamente
+  // aquele nome e a resposta seria descartada quando o dropdown fecha.
+  const skipNextFetchRef = useRef(false)
 
   // Busca sugestões com debounce a cada keystroke depois de N caracteres.
   useEffect(() => {
+    if (skipNextFetchRef.current) {
+      skipNextFetchRef.current = false
+      return
+    }
     if (query.trim().length < MIN_QUERY_LENGTH) {
       setSuggestions([])
       return
@@ -39,8 +47,10 @@ export default function SearchBar({ onSearch, onUseLocation, isLocating }) {
     }
   }, [query])
 
-  // Fecha o dropdown ao clicar fora.
+  // Fecha o dropdown ao clicar fora. Só monta o listener enquanto o
+  // dropdown está aberto — evita listener global ocioso o resto do tempo.
   useEffect(() => {
+    if (!isOpen) return undefined
     const handleClickOutside = (event) => {
       if (containerRef.current && !containerRef.current.contains(event.target)) {
         setIsOpen(false)
@@ -48,7 +58,7 @@ export default function SearchBar({ onSearch, onUseLocation, isLocating }) {
     }
     window.addEventListener('mousedown', handleClickOutside)
     return () => window.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+  }, [isOpen])
 
   const handleSubmit = (event) => {
     event.preventDefault()
@@ -59,6 +69,7 @@ export default function SearchBar({ onSearch, onUseLocation, isLocating }) {
   }
 
   const handleSelectSuggestion = (suggestion) => {
+    skipNextFetchRef.current = true
     setQuery(suggestion.name)
     setIsOpen(false)
     onSearch(suggestion.name)
