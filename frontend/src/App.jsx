@@ -122,13 +122,7 @@ function App() {
         <ErrorState error={error} onRetry={handleRetry} />
       )}
       {data && !loading && !error && (
-        <Dashboard
-          data={data}
-          fetchedAt={fetchedAt}
-          // Key força remontagem (e reexecução das animações)
-          // a cada troca de cidade.
-          key={`${data.location.name}-${data.location.latitude}`}
-        />
+        <Dashboard data={data} fetchedAt={fetchedAt} />
       )}
     </main>
   )
@@ -139,37 +133,44 @@ function Dashboard({ data, fetchedAt }) {
   // (no AtmosphericPanel em desktop e como texto solto em mobile).
   // Função pura síncrona barata; useMemo aqui só somava cerimônia.
   const summary = buildDailySummary(data.hourly, data.daily[0])
+  // Key isolada no wrapper das seções animadas: ao trocar de cidade,
+  // só essa subárvore remonta (e reexecuta o stagger). O CityMap fica
+  // FORA, preservando a instância do Leaflet entre buscas.
+  const animationKey = `${data.location.name}-${data.location.latitude}`
 
   return (
-    <div className="animate-stagger space-y-8">
-      {/* Zona 1: WeatherCard + AtmosphericPanel lado a lado em desktop. */}
-      <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
-        <WeatherCard
-          location={data.location}
-          current={data.current}
-          fetchedAt={fetchedAt}
-        />
-        <AtmosphericPanel current={data.current} summary={summary} />
+    <div className="space-y-8">
+      <div className="animate-stagger space-y-8" key={animationKey}>
+        {/* Zona 1: WeatherCard + AtmosphericPanel lado a lado em desktop. */}
+        <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
+          <WeatherCard
+            location={data.location}
+            current={data.current}
+            fetchedAt={fetchedAt}
+          />
+          <AtmosphericPanel current={data.current} summary={summary} />
+        </div>
+
+        {/* Resumo do dia em mobile (no desktop ele vive dentro do AtmosphericPanel). */}
+        {summary && (
+          <p className="lg:hidden font-serif italic text-ink/75 text-lg tracking-tight leading-snug -mt-2 px-1">
+            {summary}
+          </p>
+        )}
+
+        {/* Zona 2: features editoriais lado a lado em desktop. */}
+        <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
+          <WhatToWearCard today={data.daily[0]} />
+          <GoldenHourCard today={data.daily[0]} />
+        </div>
+
+        {/* Strip horária + previsão dos próximos dias. */}
+        <HourlyForecast hourly={data.hourly} currentTime={data.current.time} />
+        <DailyForecast daily={data.daily} />
       </div>
 
-      {/* Resumo do dia em mobile (no desktop ele vive dentro do AtmosphericPanel). */}
-      {summary && (
-        <p className="lg:hidden font-serif italic text-ink/75 text-lg tracking-tight leading-snug -mt-2 px-1">
-          {summary}
-        </p>
-      )}
-
-      {/* Zona 2: features editoriais lado a lado em desktop. */}
-      <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
-        <WhatToWearCard today={data.daily[0]} />
-        <GoldenHourCard today={data.daily[0]} />
-      </div>
-
-      {/* Strip horária + previsão dos próximos dias. */}
-      <HourlyForecast hourly={data.hourly} currentTime={data.current.time} />
-      <DailyForecast daily={data.daily} />
-
-      {/* Zona 3 (editorial dark): mapa da cidade + timeline de chuva. */}
+      {/* Zona 3 (editorial dark): estável entre buscas pra o Leaflet não
+       * re-inicializar. A nova posição é animada pelo próprio mapa via setView. */}
       <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
         <CityMap
           latitude={data.location.latitude}
