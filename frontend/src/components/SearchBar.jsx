@@ -102,7 +102,7 @@ export default function SearchBar({ onSearch, onUseLocation, isLocating }) {
           aria-autocomplete="list"
           aria-expanded={showDropdown}
           autoComplete="off"
-          className="w-full pl-11 pr-4 py-2.5 rounded-2xl bg-white/55 backdrop-blur-sm border border-ink/10 text-ink placeholder:text-ink/45 focus:outline-none focus:border-amber/50 focus:ring-2 focus:ring-amber/20 transition"
+          className="w-full pl-11 pr-4 py-2.5 rounded-2xl bg-white/75 backdrop-blur-sm border border-navy/20 text-ink placeholder:text-ink/45 focus:outline-none focus:border-amber/50 focus:ring-2 focus:ring-amber/20 transition"
         />
 
         {showDropdown && (
@@ -141,7 +141,7 @@ export default function SearchBar({ onSearch, onUseLocation, isLocating }) {
           disabled={isLocating}
           aria-label="Usar minha localização"
           title="Usar minha localização"
-          className="p-2.5 rounded-2xl bg-white/55 backdrop-blur-sm border border-ink/10 text-ink/70 hover:text-amber hover:border-amber/40 focus:outline-none focus:ring-2 focus:ring-amber/20 disabled:opacity-50 disabled:cursor-wait transition"
+          className="p-2.5 rounded-2xl bg-white/75 backdrop-blur-sm border border-navy/20 text-ink/70 hover:text-amber hover:border-amber/40 focus:outline-none focus:ring-2 focus:ring-amber/20 disabled:opacity-50 disabled:cursor-wait transition"
         >
           {isLocating ? (
             <Loader2 className="w-5 h-5 animate-spin" strokeWidth={1.75} aria-hidden="true" />

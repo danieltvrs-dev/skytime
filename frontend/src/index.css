@@ -84,17 +84,15 @@ body {
   font-family: var(--font-sans);
   color: var(--color-ink);
 
-  /* Gradiente vertical da jornada Hora Dourada:
-   * cream no topo (atmosférico) → sand (transição) → graphite (editorial).
-   * Renderizado uma única vez sobre 160vh; depois disso, fallback graphite.
-   * Sem JS: o body rola naturalmente, o gradiente acompanha o conteúdo. */
-  background-color: var(--color-graphite);
+  /* Gradiente vertical da identidade Skytime:
+   * sky-soft no topo (céu de dia) → navy no fundo (céu de noite).
+   * Renderizado uma única vez sobre 160vh; depois disso, fallback navy. */
+  background-color: var(--color-navy);
   background-image: linear-gradient(
     to bottom,
-    var(--color-cream) 0%,
-    var(--color-cream) 20%,
-    var(--color-sand) 55%,
-    var(--color-graphite) 100%
+    var(--color-sky-soft) 0%,
+    var(--color-sky-soft) 40%,
+    var(--color-navy) 100%
   );
   background-size: 100% 160vh;
   background-repeat: no-repeat;
