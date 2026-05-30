@@ -140,21 +140,16 @@ function Dashboard({ data, fetchedAt }) {
   return (
     <div className="space-y-8">
       <div className="animate-stagger space-y-8" key={animationKey}>
-        {/* Zona 1: WeatherCard + AtmosphericPanel lado a lado em desktop. */}
-        <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
-          <WeatherCard
-            location={data.location}
-            current={data.current}
-            fetchedAt={fetchedAt}
-          />
-          <AtmosphericPanel
+        {/* Zona 1: hero card único (dados + foto reativa). */}
+        <WeatherCard
+          location={data.location}
           current={data.current}
           today={data.daily[0]}
           summary={summary}
+          fetchedAt={fetchedAt}
         />
-        </div>
 
-        {/* Resumo do dia em mobile (no desktop ele vive dentro do AtmosphericPanel). */}
+        {/* Resumo do dia em mobile (no desktop ele vive dentro do WeatherCard). */}
         {summary && (
           <p className="lg:hidden font-serif italic text-ink/75 text-lg tracking-tight leading-snug -mt-2 px-1">
             {summary}
