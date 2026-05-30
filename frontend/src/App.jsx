@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { CloudOff, RotateCw } from 'lucide-react'
 
-import AtmosphericPanel from './components/AtmosphericPanel'
 import Card from './components/Card'
 import CityMap from './components/CityMap'
 import DailyForecast from './components/DailyForecast'
