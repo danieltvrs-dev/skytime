@@ -6,10 +6,10 @@ import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet'
 // do Leaflet que não carrega os assets em projetos Vite.
 const PIN_SVG = `
   <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"
-       fill="#D9A55B" stroke="#1F1A14" stroke-width="1.5"
+       fill="#F9A03F" stroke="#0B1B3D" stroke-width="1.5"
        stroke-linecap="round" stroke-linejoin="round">
     <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
-    <circle cx="12" cy="10" r="3" fill="#1F1A14"/>
+    <circle cx="12" cy="10" r="3" fill="#0B1B3D"/>
   </svg>
 `
 

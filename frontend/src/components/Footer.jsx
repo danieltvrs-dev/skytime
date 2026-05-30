@@ -11,7 +11,7 @@ export default function Footer() {
             Skytime
           </p>
           <p className="mt-1 text-xs text-paper/45 tracking-wide">
-            Tempo agora, com personalidade.
+            Seu céu, minuto a minuto.
           </p>
         </div>
 
