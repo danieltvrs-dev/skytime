@@ -1,6 +1,9 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.core import http_client
 from app.routes import history, weather
 
 # Origens autorizadas a chamar a API a partir do navegador.
@@ -10,10 +13,22 @@ ALLOWED_ORIGINS = [
     "http://127.0.0.1:5173",
 ]
 
+
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    """Sobe e derruba recursos compartilhados (pool HTTP, etc.)."""
+    await http_client.startup()
+    try:
+        yield
+    finally:
+        await http_client.shutdown()
+
+
 app = FastAPI(
     title="Skytime API",
     description="API do dashboard de clima Skytime.",
     version="0.1.0",
+    lifespan=lifespan,
 )
 
 app.add_middleware(

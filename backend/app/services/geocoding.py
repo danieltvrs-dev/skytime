@@ -6,12 +6,12 @@ Documentação: https://open-meteo.com/en/docs/geocoding-api
 
 import httpx
 
+from app.core.http_client import get_http_client
 from app.schemas.weather import GeocodingResult
 from app.services.cache import TTLCache
 
 GEOCODING_URL = "https://geocoding-api.open-meteo.com/v1/search"
 REVERSE_GEOCODING_URL = "https://nominatim.openstreetmap.org/reverse"
-TIMEOUT_SECONDS = 10.0
 CACHE_TTL_SECONDS = 24 * 60 * 60  # cidades não se movem, cache longo
 
 # Nominatim exige User-Agent identificável (sem isso devolve 403).
@@ -57,10 +57,9 @@ async def _fetch_geocoding(name: str, count: int) -> list[GeocodingResult]:
         "format": "json",
     }
     try:
-        async with httpx.AsyncClient(timeout=TIMEOUT_SECONDS) as client:
-            response = await client.get(GEOCODING_URL, params=params)
-            response.raise_for_status()
-            data = response.json()
+        response = await get_http_client().get(GEOCODING_URL, params=params)
+        response.raise_for_status()
+        data = response.json()
     except httpx.HTTPError as exc:
         raise GeocodingServiceError(
             f"Falha ao consultar geocoding: {exc}"
@@ -128,14 +127,15 @@ async def reverse_geocode(latitude: float, longitude: float) -> GeocodingResult:
         "accept-language": "pt-BR,pt,en",
         "zoom": 10,  # nível de cidade (zoom maior cai em rua/bairro)
     }
+    # User-Agent custom por request — não dá pra setar no cliente compartilhado
+    # porque outras chamadas (Open-Meteo) não precisam dele.
     headers = {"User-Agent": NOMINATIM_USER_AGENT}
     try:
-        async with httpx.AsyncClient(
-            timeout=TIMEOUT_SECONDS, headers=headers
-        ) as client:
-            response = await client.get(REVERSE_GEOCODING_URL, params=params)
-            response.raise_for_status()
-            data = response.json()
+        response = await get_http_client().get(
+            REVERSE_GEOCODING_URL, params=params, headers=headers
+        )
+        response.raise_for_status()
+        data = response.json()
     except httpx.HTTPError as exc:
         raise GeocodingServiceError(
             f"Falha ao consultar reverse geocoding: {exc}"

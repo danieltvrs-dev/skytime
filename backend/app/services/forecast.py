@@ -8,6 +8,7 @@ Documentação: https://open-meteo.com/en/docs
 
 import httpx
 
+from app.core.http_client import get_http_client
 from app.schemas.weather import (
     CurrentWeather,
     DailyPoint,
@@ -18,7 +19,6 @@ from app.services.cache import TTLCache
 from app.services.weather_codes import describe
 
 FORECAST_URL = "https://api.open-meteo.com/v1/forecast"
-TIMEOUT_SECONDS = 10.0
 FORECAST_DAYS = 5
 CACHE_TTL_SECONDS = 10 * 60  # 10 minutos: dados parecem ao vivo, sem queimar a API
 
@@ -72,10 +72,9 @@ async def fetch_forecast(latitude: float, longitude: float) -> ForecastData:
         "forecast_days": FORECAST_DAYS,
     }
     try:
-        async with httpx.AsyncClient(timeout=TIMEOUT_SECONDS) as client:
-            response = await client.get(FORECAST_URL, params=params)
-            response.raise_for_status()
-            data = response.json()
+        response = await get_http_client().get(FORECAST_URL, params=params)
+        response.raise_for_status()
+        data = response.json()
     except httpx.HTTPError as exc:
         raise ForecastServiceError(
             f"Falha ao consultar forecast: {exc}"
