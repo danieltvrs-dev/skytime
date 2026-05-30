@@ -1,3 +1,5 @@
+import Card from './Card'
+import SectionLabel from './SectionLabel'
 import { formatHour } from '../utils/dateFormat'
 import { getWeatherIcon } from '../utils/weatherIcons'
 
@@ -15,10 +17,8 @@ export default function HourlyForecast({ hourly, currentTime }) {
   const next = hourly.slice(startIndex, startIndex + HOURS_TO_SHOW)
 
   return (
-    <section className="rounded-3xl px-6 py-4 bg-white/45 backdrop-blur-sm border border-ink/5 shadow-sm">
-      <h3 className="text-[11px] font-medium text-ink/55 mb-3 tracking-[0.14em] uppercase">
-        Próximas horas
-      </h3>
+    <Card as="section" className="px-6 py-4">
+      <SectionLabel className="mb-3">Próximas horas</SectionLabel>
       <div className="overflow-x-auto -mx-6 px-6 pb-1">
         <ul className="flex gap-5 min-w-fit">
           {next.map((hour, index) => (
@@ -26,7 +26,7 @@ export default function HourlyForecast({ hourly, currentTime }) {
           ))}
         </ul>
       </div>
-    </section>
+    </Card>
   )
 }
 

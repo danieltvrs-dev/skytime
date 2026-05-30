@@ -1,4 +1,5 @@
 import { Droplets, Thermometer, Wind } from 'lucide-react'
+import Card from './Card'
 import { getWeatherIcon } from '../utils/weatherIcons'
 import { useRelativeTime } from '../hooks/useRelativeTime'
 
@@ -19,7 +20,7 @@ export default function WeatherCard({ location, current, fetchedAt }) {
   const relativeTime = useRelativeTime(fetchedAt)
 
   return (
-    <article className="rounded-3xl p-8 bg-white/55 backdrop-blur-sm border border-ink/5 shadow-sm">
+    <Card as="article" variant="lightHero" className="p-8">
       <header className="flex items-start justify-between gap-4 mb-8">
         <div>
           <h2 className="font-serif text-3xl text-ink leading-none tracking-tight">
@@ -64,7 +65,7 @@ export default function WeatherCard({ location, current, fetchedAt }) {
           value={`${Math.round(current.wind_speed)} km/h`}
         />
       </dl>
-    </article>
+    </Card>
   )
 }
 

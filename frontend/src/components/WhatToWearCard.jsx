@@ -1,4 +1,6 @@
 import { useMemo } from 'react'
+import Card from './Card'
+import SectionLabel from './SectionLabel'
 import { getRecommendations } from '../utils/whatToWear'
 
 /**
@@ -12,10 +14,8 @@ export default function WhatToWearCard({ today }) {
   const recommendations = useMemo(() => getRecommendations(today), [today])
 
   return (
-    <section className="rounded-3xl p-6 bg-white/45 backdrop-blur-sm border border-ink/5 shadow-sm">
-      <h3 className="text-[11px] font-medium text-ink/55 mb-4 tracking-[0.14em] uppercase">
-        O que levar hoje
-      </h3>
+    <Card as="section" className="p-6">
+      <SectionLabel className="mb-4">O que levar hoje</SectionLabel>
 
       {recommendations.length === 0 ? (
         <p className="text-sm text-ink/60 font-serif italic">
@@ -41,6 +41,6 @@ export default function WhatToWearCard({ today }) {
           })}
         </ul>
       )}
-    </section>
+    </Card>
   )
 }

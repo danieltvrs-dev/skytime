@@ -1,21 +1,22 @@
+import Card from './Card'
+
 /**
  * Estado de carregamento do dashboard — "fantasma" que reproduz a estrutura
- * das seções reais com blocos translúcidos pulsantes. Substitui o spinner antigo.
- * Animação `animate-pulse` do Tailwind dá a sensação de "vivo, carregando".
+ * das seções reais com blocos translúcidos pulsantes. Usa o mesmo primitivo
+ * Card que as seções reais, garantindo que o skeleton não saia do tom quando
+ * o design dos cards muda.
  */
 export default function SkeletonDashboard() {
   return (
     <>
-      {/* Zona 1: WeatherCard + AtmosphericPanel */}
       <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
         <SkeletonWeatherCard />
         <SkeletonAtmosphericPanel />
       </div>
 
-      {/* Zona 2: 2 cards lado a lado */}
       <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
-        <SkeletonCard height="h-28" />
-        <SkeletonCard height="h-48" />
+        <SkeletonTextCard height="h-28" />
+        <SkeletonTextCard height="h-48" />
       </div>
 
       <SkeletonHourly />
@@ -26,7 +27,7 @@ export default function SkeletonDashboard() {
 
 function SkeletonWeatherCard() {
   return (
-    <div className="rounded-3xl p-8 bg-white/55 backdrop-blur-sm border border-ink/5 shadow-sm animate-pulse">
+    <Card variant="lightHero" className="p-8 animate-pulse">
       <div className="flex items-start justify-between mb-8">
         <div>
           <div className="h-7 w-44 bg-ink/10 rounded" />
@@ -45,7 +46,7 @@ function SkeletonWeatherCard() {
           </div>
         ))}
       </div>
-    </div>
+    </Card>
   )
 }
 
@@ -60,21 +61,19 @@ function SkeletonAtmosphericPanel() {
   )
 }
 
-function SkeletonCard({ height }) {
+function SkeletonTextCard({ height }) {
   return (
-    <div
-      className={`rounded-3xl p-6 bg-white/45 backdrop-blur-sm border border-ink/5 shadow-sm animate-pulse ${height}`}
-    >
+    <Card className={`p-6 animate-pulse ${height}`}>
       <div className="h-3 w-24 bg-ink/10 rounded mb-4" />
       <div className="h-4 w-3/4 bg-ink/10 rounded mb-2" />
       <div className="h-4 w-2/3 bg-ink/10 rounded" />
-    </div>
+    </Card>
   )
 }
 
 function SkeletonHourly() {
   return (
-    <div className="rounded-3xl px-6 py-4 bg-white/45 backdrop-blur-sm border border-ink/5 shadow-sm animate-pulse">
+    <Card className="px-6 py-4 animate-pulse">
       <div className="h-3 w-32 bg-ink/10 rounded mb-3" />
       <div className="flex gap-5">
         {Array.from({ length: 10 }).map((_, i) => (
@@ -85,13 +84,13 @@ function SkeletonHourly() {
           </div>
         ))}
       </div>
-    </div>
+    </Card>
   )
 }
 
 function SkeletonDaily() {
   return (
-    <div className="rounded-3xl p-6 bg-ink border border-paper/10 shadow-md animate-pulse">
+    <Card variant="dark" className="p-6 animate-pulse">
       <div className="h-3 w-32 bg-paper/15 rounded mb-4" />
       {Array.from({ length: 5 }).map((_, i) => (
         <div
@@ -104,6 +103,6 @@ function SkeletonDaily() {
           <div className="h-4 w-20 bg-paper/15 rounded" />
         </div>
       ))}
-    </div>
+    </Card>
   )
 }

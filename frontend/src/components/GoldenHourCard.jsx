@@ -1,5 +1,7 @@
 import { useMemo } from 'react'
 import { Sunrise, Sunset } from 'lucide-react'
+import Card from './Card'
+import SectionLabel from './SectionLabel'
 import { getSunWindows } from '../utils/goldenHour'
 
 /**
@@ -16,10 +18,8 @@ export default function GoldenHourCard({ today }) {
   if (!windows) return null
 
   return (
-    <section className="rounded-3xl p-6 bg-white/45 backdrop-blur-sm border border-ink/5 shadow-sm">
-      <h3 className="text-[11px] font-medium text-ink/55 mb-5 tracking-[0.14em] uppercase">
-        A luz hoje
-      </h3>
+    <Card as="section" className="p-6">
+      <SectionLabel className="mb-5">A luz hoje</SectionLabel>
 
       <div className="grid grid-cols-2 gap-4 mb-5 pb-5 border-b border-ink/10">
         <SunMoment icon={Sunrise} label="Nascer" time={windows.sunrise} />
@@ -39,7 +39,7 @@ export default function GoldenHourCard({ today }) {
           evening={windows.eveningBlue}
         />
       </div>
-    </section>
+    </Card>
   )
 }
 

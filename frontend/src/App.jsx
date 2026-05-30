@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { CloudOff, RotateCw } from 'lucide-react'
 
 import AtmosphericPanel from './components/AtmosphericPanel'
+import Card from './components/Card'
 import CityMap from './components/CityMap'
 import DailyForecast from './components/DailyForecast'
 import Footer from './components/Footer'
@@ -194,7 +195,10 @@ function ErrorState({ error, onRetry }) {
   const detail = error.response?.data?.detail || error.message || 'Erro desconhecido'
 
   return (
-    <div className="rounded-3xl p-10 bg-white/55 backdrop-blur-sm border border-ink/10 shadow-sm flex flex-col items-center text-center max-w-lg mx-auto">
+    <Card
+      variant="lightHero"
+      className="p-10 flex flex-col items-center text-center max-w-lg mx-auto"
+    >
       <CloudOff
         className="w-12 h-12 text-ink/30 mb-5"
         strokeWidth={1.25}
@@ -214,7 +218,7 @@ function ErrorState({ error, onRetry }) {
           Tentar de novo
         </button>
       )}
-    </div>
+    </Card>
   )
 }
 

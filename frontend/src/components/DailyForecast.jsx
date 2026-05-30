@@ -1,3 +1,5 @@
+import Card from './Card'
+import SectionLabel from './SectionLabel'
 import { getWeatherIcon } from '../utils/weatherIcons'
 import { formatDailyLabel } from '../utils/dateFormat'
 
@@ -8,16 +10,14 @@ import { formatDailyLabel } from '../utils/dateFormat'
  */
 export default function DailyForecast({ daily }) {
   return (
-    <section className="rounded-3xl p-6 bg-ink text-paper border border-paper/10 shadow-md">
-      <h3 className="text-[11px] font-medium text-paper/50 mb-5 tracking-[0.14em] uppercase">
-        Próximos dias
-      </h3>
+    <Card as="section" variant="dark" className="p-6">
+      <SectionLabel tone="dark" className="mb-5">Próximos dias</SectionLabel>
       <ul className="divide-y divide-paper/10">
         {daily.map((day, index) => (
           <DailyRow key={day.date} day={day} isToday={index === 0} />
         ))}
       </ul>
-    </section>
+    </Card>
   )
 }
 

@@ -1,3 +1,5 @@
+import Card from './Card'
+import SectionLabel from './SectionLabel'
 import { formatHour } from '../utils/dateFormat'
 
 const HOURS_AHEAD = 12
@@ -20,10 +22,10 @@ export default function RainTimeline({ hourly, currentTime }) {
   const maxProb = Math.max(...next.map((h) => h.precipitation_probability ?? 0))
 
   return (
-    <section className="rounded-3xl p-6 bg-ink text-paper border border-paper/10 shadow-md">
-      <h3 className="text-[11px] font-medium text-paper/50 mb-5 tracking-[0.14em] uppercase">
+    <Card as="section" variant="dark" className="p-6">
+      <SectionLabel tone="dark" className="mb-5">
         Chance de chuva — próximas 12 horas
-      </h3>
+      </SectionLabel>
 
       {/* Open-Meteo às vezes retorna 1-2% como "ruído" em vez de 0%.
        * Tratamos qualquer pico abaixo de 5% como "sem chuva pra valer". */}
@@ -61,7 +63,7 @@ export default function RainTimeline({ hourly, currentTime }) {
           </span>
         ))}
       </div>
-    </section>
+    </Card>
   )
 }
 
