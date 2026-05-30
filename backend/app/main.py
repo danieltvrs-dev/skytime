@@ -4,14 +4,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core import http_client
+from app.core.config import settings
 from app.routes import history, weather
-
-# Origens autorizadas a chamar a API a partir do navegador.
-# Em produção, adicionar o domínio do frontend hospedado.
-ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-]
 
 
 @asynccontextmanager
@@ -33,7 +27,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=ALLOWED_ORIGINS,
+    allow_origins=settings.ALLOWED_ORIGINS,
     allow_credentials=False,  # não usamos cookies/sessão
     allow_methods=["GET"],
     allow_headers=["*"],
