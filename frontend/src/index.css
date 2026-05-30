@@ -58,6 +58,10 @@ html, body, #root {
 .animate-stagger > *:nth-child(6) { animation-delay: 350ms; }
 .animate-stagger > *:nth-child(7) { animation-delay: 420ms; }
 .animate-stagger > *:nth-child(8) { animation-delay: 490ms; }
+.animate-stagger > *:nth-child(9) { animation-delay: 560ms; }
+.animate-stagger > *:nth-child(10) { animation-delay: 630ms; }
+.animate-stagger > *:nth-child(11) { animation-delay: 700ms; }
+.animate-stagger > *:nth-child(12) { animation-delay: 770ms; }
 
 @media (prefers-reduced-motion: reduce) {
   .animate-stagger > * { animation: none; }

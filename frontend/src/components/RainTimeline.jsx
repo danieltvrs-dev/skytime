@@ -4,6 +4,11 @@ import { formatHour } from '../utils/dateFormat'
 
 const HOURS_AHEAD = 12
 
+// A Open-Meteo às vezes retorna 1-2% de chuva como "ruído" em horas
+// claramente sem precipitação. Tratamos qualquer pico abaixo desse
+// limiar como "sem chuva pra valer".
+const RAIN_NOISE_THRESHOLD = 5
+
 /**
  * Gráfico de barras com a chance de chuva nas próximas 12 horas.
  * Reaproveita `hourly[i].precipitation_probability` que já vem do backend.
@@ -27,9 +32,7 @@ export default function RainTimeline({ hourly, currentTime }) {
         Chance de chuva — próximas 12 horas
       </SectionLabel>
 
-      {/* Open-Meteo às vezes retorna 1-2% como "ruído" em vez de 0%.
-       * Tratamos qualquer pico abaixo de 5% como "sem chuva pra valer". */}
-      {maxProb < 5 ? (
+      {maxProb < RAIN_NOISE_THRESHOLD ? (
         <p className="font-serif italic text-paper/60 text-sm">
           Sem chuva prevista nas próximas 12 horas.
         </p>

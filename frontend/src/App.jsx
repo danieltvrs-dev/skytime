@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { CloudOff, RotateCw } from 'lucide-react'
 
 import AtmosphericPanel from './components/AtmosphericPanel'
@@ -36,8 +36,6 @@ function App() {
   const [history, setHistory] = useState([])
   // Incrementa toda vez que o histórico precisa ser revalidado.
   const [historyVersion, setHistoryVersion] = useState(0)
-  // Incrementa quando o usuário clica "tentar de novo" depois de um erro.
-  const [retryTick, setRetryTick] = useState(0)
   const geo = useGeolocation()
 
   useEffect(() => {
@@ -62,7 +60,11 @@ function App() {
       .finally(() => { if (!cancelled) setLoading(false) })
 
     return () => { cancelled = true }
-  }, [query, retryTick])
+  }, [query])
+
+  // Re-tentar é só forçar uma nova referência de `query` pra reexecutar o useEffect.
+  // Mais simples que um state separado só pra incrementar contador.
+  const handleRetry = () => setQuery((prev) => ({ ...prev }))
 
   useEffect(() => {
     let cancelled = false
@@ -117,10 +119,7 @@ function App() {
 
       {loading && <SkeletonDashboard />}
       {error && !loading && (
-        <ErrorState
-          error={error}
-          onRetry={() => setRetryTick((t) => t + 1)}
-        />
+        <ErrorState error={error} onRetry={handleRetry} />
       )}
       {data && !loading && !error && (
         <Dashboard
@@ -138,10 +137,8 @@ function App() {
 function Dashboard({ data, fetchedAt }) {
   // Frase editorial sobre o dia inteiro, reutilizada em dois lugares
   // (no AtmosphericPanel em desktop e como texto solto em mobile).
-  const summary = useMemo(
-    () => buildDailySummary(data.hourly, data.daily[0]),
-    [data],
-  )
+  // Função pura síncrona barata; useMemo aqui só somava cerimônia.
+  const summary = buildDailySummary(data.hourly, data.daily[0])
 
   return (
     <div className="animate-stagger space-y-8">
