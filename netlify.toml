@@ -1,0 +1,35 @@
+# Configuração de build do Netlify.
+# Como o projeto é monorepo (frontend/ + backend/), apontamos a base
+# pro frontend. Backend é deployado em outro host (Railway/Render).
+
+[build]
+  base = "frontend"
+  publish = "frontend/dist"
+  command = "npm install && npm run build"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# SPA rewrite: qualquer rota cai no index.html, deixando o React Router
+# (futuramente) lidar com client-side routing sem 404.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Cache forte pros assets versionados do Vite (nome inclui hash).
+# Index e SW ficam com cache curto pra propagar atualizações rápido.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"

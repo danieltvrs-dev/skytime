@@ -120,6 +120,29 @@ npm run build                   # build de produção (inclui service worker do 
 npm run preview                 # serve o build local
 ```
 
+### Deploy
+
+**Frontend (Netlify)**
+
+O `netlify.toml` na raiz já configura build e cache. Pra publicar:
+
+1. Conecta o repositório no Netlify (Add new site → Import from Git)
+2. Define a env var `VITE_API_URL` apontando pra URL do backend hospedado
+3. Deploy automático em cada push pra `main`
+
+**Backend (Railway, Render ou Fly.io)**
+
+Hospedar um serviço Python + um Postgres. Em qualquer um dos três, o roteiro é
+parecido:
+
+1. Cria um Postgres gerenciado e copia a connection string
+2. Cria um serviço web apontado pro repositório, pasta `backend/`
+3. Comando de start: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+4. Env vars:
+   - `DATABASE_URL` (use o driver `asyncpg`, ex: `postgresql+asyncpg://...`)
+   - `ALLOWED_ORIGINS` com a URL do frontend publicado
+5. Roda `alembic upgrade head` uma vez (release command ou shell manual)
+
 ### Licença
 
-Código sob a MIT, à disposição pra estudo ou reuso.
+Código sob a MIT. Veja `LICENSE`.
