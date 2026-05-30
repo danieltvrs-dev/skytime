@@ -16,8 +16,8 @@ export default defineConfig({
         short_name: 'Skytime',
         description:
           'Dashboard de clima com tempo agora, previsão dos próximos dias e localização automática.',
-        theme_color: '#1A1714',
-        background_color: '#F5F1EA',
+        theme_color: '#0A4DA3',
+        background_color: '#F7F4EE',
         display: 'standalone',
         orientation: 'portrait-primary',
         start_url: '/',

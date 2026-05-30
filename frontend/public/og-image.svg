@@ -1,28 +1,43 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
-  <defs>
-    <linearGradient id="bg" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#F5F1EA"/>
-      <stop offset="55%" stop-color="#8B7F70"/>
-      <stop offset="100%" stop-color="#1A1714"/>
-    </linearGradient>
-  </defs>
-  <rect width="1200" height="630" fill="url(#bg)"/>
-  <text x="120" y="280"
-        font-family="Fraunces, Georgia, serif"
-        font-size="180"
-        font-weight="500"
-        fill="#1F1A14">Skytime</text>
-  <text x="120" y="350"
+  <!-- Fundo Sky Deep -->
+  <rect width="1200" height="630" fill="#0A4DA3"/>
+
+  <!-- Logo do Skytime à esquerda -->
+  <g transform="translate(120, 187) scale(0.5)">
+    <rect width="512" height="512" rx="112" ry="112" fill="#F7F4EE"/>
+    <circle cx="378" cy="134" r="52" fill="#F9A03F"/>
+    <g fill="#0A4DA3">
+      <rect x="118" y="282" width="280" height="80" rx="40"/>
+      <circle cx="182" cy="270" r="56"/>
+      <circle cx="254" cy="232" r="72"/>
+      <circle cx="332" cy="262" r="58"/>
+    </g>
+    <g stroke="#F7F4EE" stroke-width="16" stroke-linecap="round" fill="none">
+      <line x1="252" y1="268" x2="252" y2="318"/>
+      <line x1="252" y1="268" x2="204" y2="268"/>
+    </g>
+  </g>
+
+  <!-- Wordmark -->
+  <text x="450" y="330"
         font-family="Inter, system-ui, sans-serif"
-        font-size="36"
+        font-size="148"
+        font-weight="700"
+        fill="#F7F4EE"
+        letter-spacing="-4">skytime</text>
+
+  <!-- Tagline -->
+  <text x="452" y="394"
+        font-family="Inter, system-ui, sans-serif"
+        font-size="32"
         font-weight="400"
-        fill="#1F1A14"
-        opacity="0.7">Tempo agora, com personalidade.</text>
-  <circle cx="1020" cy="180" r="60" fill="#D9A55B"/>
-  <text x="120" y="540"
+        fill="#BFDBFE">Seu céu, minuto a minuto.</text>
+
+  <!-- Pequena tag rodapé -->
+  <text x="120" y="565"
         font-family="Inter, system-ui, sans-serif"
-        font-size="24"
+        font-size="20"
         font-weight="500"
-        fill="#EFE9DC"
-        letter-spacing="4">DASHBOARD DE CLIMA</text>
+        fill="#BFDBFE"
+        letter-spacing="4">PREVISÃO DO TEMPO · WEB &amp; APP</text>
 </svg>
