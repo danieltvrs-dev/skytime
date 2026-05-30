@@ -1,15 +1,17 @@
 /**
  * Painel atmosférico — coluna direita da Zona 1 em telas lg+.
- * Foto de céu reativa ao clima, com overlay escuro embaixo pra o texto
- * em itálico serif sobreviver sobre fotos de qualquer cor.
+ * Foto de céu reativa ao clima (e à hora do dia para `clear`),
+ * com overlay escuro embaixo pra o texto em itálico serif sobreviver
+ * sobre fotos de qualquer cor.
  *
  * Props:
- *   current:  objeto current do backend (com description, icon)
+ *   current:  objeto current do backend (com description, icon, time)
+ *   today:    daily[0] do backend (precisa de sunrise/sunset pra detectar noite)
  *   summary:  frase resumo do dia (opcional); se ausente, cai em current.description
  */
-export default function AtmosphericPanel({ current, summary }) {
+export default function AtmosphericPanel({ current, today, summary }) {
   const phrase = summary || `${capitalize(current.description)}.`
-  const photo = photoFor(current.icon)
+  const photo = photoFor(current.icon, isNight(current.time, today))
 
   return (
     <aside
@@ -34,10 +36,8 @@ export default function AtmosphericPanel({ current, summary }) {
 }
 
 // Mapeia `icon_key` do backend pro nome de arquivo em /public/sky/.
-// As 8 fotos cobrem as condições principais; variantes (rain-showers, etc.)
-// caem na mais próxima sem inflar o bundle de imagens.
+// `clear` tem variantes dia/noite tratadas separadamente em photoFor().
 const PHOTO_MAP = {
-  'clear': 'clear',
   'mostly-clear': 'mostly-clear',
   'partly-cloudy': 'partly-cloudy',
   'cloudy': 'cloudy',
@@ -50,9 +50,22 @@ const PHOTO_MAP = {
   'thunderstorm': 'thunderstorm',
 }
 
-function photoFor(iconKey) {
+function photoFor(iconKey, isNightTime) {
+  if (iconKey === 'clear') {
+    return isNightTime ? '/sky/clear-night.webp' : '/sky/clear-day.webp'
+  }
   const name = PHOTO_MAP[iconKey] || 'cloudy' // fallback seguro
   return `/sky/${name}.webp`
+}
+
+// `current.time` e os sunrise/sunset vêm no fuso da cidade, sem offset.
+// Comparamos apenas a string "HH:MM" — robusto e sem cair em parsing de timezone.
+function isNight(currentTime, today) {
+  if (!currentTime || !today?.sunrise || !today?.sunset) return false
+  const now = currentTime.slice(11, 16)
+  const rise = today.sunrise.slice(11, 16)
+  const set = today.sunset.slice(11, 16)
+  return now < rise || now >= set
 }
 
 function capitalize(s) {

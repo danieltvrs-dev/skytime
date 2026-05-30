@@ -148,7 +148,11 @@ function Dashboard({ data, fetchedAt }) {
             current={data.current}
             fetchedAt={fetchedAt}
           />
-          <AtmosphericPanel current={data.current} summary={summary} />
+          <AtmosphericPanel
+          current={data.current}
+          today={data.daily[0]}
+          summary={summary}
+        />
         </div>
 
         {/* Resumo do dia em mobile (no desktop ele vive dentro do AtmosphericPanel). */}

@@ -18,7 +18,10 @@ from PIL import Image
 # slug do Unsplash -> nome do arquivo de saída (sem extensão).
 # O nome deve casar com a icon_key que o backend devolve para cada condição WMO.
 PHOTOS: dict[str, str] = {
-    "clear": "FdBGX44aNZM",
+    # "clear" tem duas variantes: dia e noite. O AtmosphericPanel escolhe
+    # baseado em current.time vs sunrise/sunset.
+    "clear-day": "UbS64eogAAU",
+    "clear-night": "FdBGX44aNZM",
     "mostly-clear": "gnxb59lGU1M",
     "partly-cloudy": "kIr8e-01eAw",
     "cloudy": "Pe1Ol9oLc4o",
