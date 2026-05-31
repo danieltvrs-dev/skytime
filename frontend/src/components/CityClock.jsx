@@ -54,9 +54,6 @@ export default function CityClock({ baseTime, fetchedAt, size = 64 }) {
           />
         ))}
 
-        {/* Sol no canto superior direito — assinatura visual do logo */}
-        <circle cx="82" cy="18" r="8" fill="#F9A03F" />
-
         {/* Ponteiro de horas — tapered (triangular), sky-deep */}
         <polygon
           points="47,53 53,53 50,28"
