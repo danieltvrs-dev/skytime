@@ -8,6 +8,7 @@ import DailyForecast from './components/DailyForecast'
 import Footer from './components/Footer'
 import GoldenHourCard from './components/GoldenHourCard'
 import HourlyForecast from './components/HourlyForecast'
+import NextEventCard from './components/NextEventCard'
 import RainTimeline from './components/RainTimeline'
 import SearchBar from './components/SearchBar'
 import SearchHistory from './components/SearchHistory'
@@ -204,11 +205,20 @@ function Dashboard({ data, fetchedAt, isDefaultCity, onSetDefault }) {
           </p>
         )}
 
-        {/* Zona 2: features editoriais lado a lado em desktop.
-         * Sem items-start aqui: os dois cards estiram pra mesma altura e o
-         * WhatToWearCard usa mt-auto na frase pra ela pousar no rodapé. */}
+        {/* Zona 2: features editoriais.
+         * Coluna esquerda tem dois cards empilhados (vestir + próximo evento),
+         * coluna direita tem o GoldenHourCard (mais alto). As duas colunas
+         * estiram juntas pra manter equilíbrio. */}
         <div className="grid gap-6 lg:grid-cols-2">
-          <WhatToWearCard today={data.daily[0]} />
+          <div className="flex flex-col gap-6">
+            <WhatToWearCard today={data.daily[0]} />
+            <NextEventCard
+              hourly={data.hourly}
+              currentTime={data.current.time}
+              currentIcon={data.current.icon}
+              fetchedAt={fetchedAt}
+            />
+          </div>
           <GoldenHourCard today={data.daily[0]} />
         </div>
 
