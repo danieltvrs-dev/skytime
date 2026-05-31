@@ -81,7 +81,7 @@ export default function SearchBar({ onSearch, onUseLocation, isLocating }) {
     <form
       ref={containerRef}
       onSubmit={handleSubmit}
-      className="flex-1 flex items-center gap-2 lg:max-w-xs relative"
+      className="flex items-center gap-2 lg:max-w-xl relative"
     >
       <div className="relative flex-1">
         <Search
