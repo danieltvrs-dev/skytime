@@ -1,4 +1,4 @@
-import { Droplets, Thermometer, Wind } from 'lucide-react'
+import { Droplets, Pin, PinOff, Thermometer, Wind } from 'lucide-react'
 import Card from './Card'
 import CityClock from './CityClock'
 import { getWeatherIcon } from '../utils/weatherIcons'
@@ -23,6 +23,8 @@ export default function WeatherCard({
   today,
   summary,
   fetchedAt,
+  isDefaultCity,
+  onSetDefault,
 }) {
   const Icon = getWeatherIcon(current.icon)
   const region = location.admin1
@@ -64,6 +66,30 @@ export default function WeatherCard({
               <p className="text-ink/40 text-xs mt-2">
                 atualizado {relativeTime}
               </p>
+            )}
+            {onSetDefault && (
+              <button
+                type="button"
+                onClick={onSetDefault}
+                disabled={isDefaultCity}
+                className={`mt-3 inline-flex items-center gap-1.5 text-[11px] tracking-wide uppercase transition ${
+                  isDefaultCity
+                    ? 'text-amber cursor-default'
+                    : 'text-ink/45 hover:text-ink'
+                }`}
+              >
+                {isDefaultCity ? (
+                  <>
+                    <Pin className="w-3 h-3" strokeWidth={2.5} aria-hidden="true" />
+                    Cidade padrão
+                  </>
+                ) : (
+                  <>
+                    <PinOff className="w-3 h-3" strokeWidth={2} aria-hidden="true" />
+                    Definir como padrão
+                  </>
+                )}
+              </button>
             )}
           </div>
 

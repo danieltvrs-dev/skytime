@@ -13,6 +13,7 @@ import SearchHistory from './components/SearchHistory'
 import SkeletonDashboard from './components/SkeletonDashboard'
 import WeatherCard from './components/WeatherCard'
 import WhatToWearCard from './components/WhatToWearCard'
+import { useDefaultCity } from './hooks/useDefaultCity'
 import { useGeolocation } from './hooks/useGeolocation'
 import {
   deleteHistoryEntry,
@@ -22,12 +23,13 @@ import {
 } from './services/weather'
 import { buildDailySummary } from './utils/dailySummary'
 
-const DEFAULT_QUERY = { type: 'city', value: 'São Paulo' }
-
 function App() {
+  // Cidade padrão persistida em localStorage. Se nunca foi setada,
+  // cai em "São Paulo" como fallback.
+  const [defaultCity, setDefaultCity] = useDefaultCity()
   // query.type: 'city' (busca por nome) ou 'coords' (geolocalização).
   // Um useEffect decide qual endpoint chamar baseado nisso.
-  const [query, setQuery] = useState(DEFAULT_QUERY)
+  const [query, setQuery] = useState(() => ({ type: 'city', value: defaultCity }))
   const [data, setData] = useState(null)
   const [fetchedAt, setFetchedAt] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -88,6 +90,12 @@ function App() {
     }
   }
 
+  // "Definir cidade atual como padrão" — usa o nome resolvido pelo backend
+  // (vai ser o que o geocoding decidiu, mesmo se o usuário digitou variantes).
+  const handleSetDefaultCity = () => {
+    if (data?.location?.name) setDefaultCity(data.location.name)
+  }
+
   const handleDeleteHistoryEntry = async (id) => {
     try {
       await deleteHistoryEntry(id)
@@ -121,13 +129,18 @@ function App() {
         <ErrorState error={error} onRetry={handleRetry} />
       )}
       {data && !loading && !error && (
-        <Dashboard data={data} fetchedAt={fetchedAt} />
+        <Dashboard
+          data={data}
+          fetchedAt={fetchedAt}
+          isDefaultCity={data.location.name === defaultCity}
+          onSetDefault={handleSetDefaultCity}
+        />
       )}
     </main>
   )
 }
 
-function Dashboard({ data, fetchedAt }) {
+function Dashboard({ data, fetchedAt, isDefaultCity, onSetDefault }) {
   // Frase editorial sobre o dia inteiro, reutilizada em dois lugares
   // (no AtmosphericPanel em desktop e como texto solto em mobile).
   // Função pura síncrona barata; useMemo aqui só somava cerimônia.
@@ -147,6 +160,8 @@ function Dashboard({ data, fetchedAt }) {
           today={data.daily[0]}
           summary={summary}
           fetchedAt={fetchedAt}
+          isDefaultCity={isDefaultCity}
+          onSetDefault={onSetDefault}
         />
 
         {/* Resumo do dia em mobile (no desktop ele vive dentro do WeatherCard). */}
