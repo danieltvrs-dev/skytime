@@ -13,6 +13,7 @@ import RainTimeline from './components/RainTimeline'
 import SearchBar from './components/SearchBar'
 import SearchHistory from './components/SearchHistory'
 import SkeletonDashboard from './components/SkeletonDashboard'
+import ThemeToggle from './components/ThemeToggle'
 import WeatherCard from './components/WeatherCard'
 import WhatToWearCard from './components/WhatToWearCard'
 import { useDefaultCity } from './hooks/useDefaultCity'
@@ -150,6 +151,7 @@ function Skytime() {
           onUseLocation={handleUseLocation}
           isLocating={geo.loading}
         />
+        <ThemeToggle />
       </header>
 
       <SearchHistory
