@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import Card from './Card'
 import SectionLabel from './SectionLabel'
+import { getDayMood } from '../utils/dayMood'
 import { getRecommendations } from '../utils/whatToWear'
 
 /**
@@ -12,16 +13,13 @@ import { getRecommendations } from '../utils/whatToWear'
  */
 export default function WhatToWearCard({ today }) {
   const recommendations = useMemo(() => getRecommendations(today), [today])
+  const mood = useMemo(() => getDayMood(today), [today])
 
   return (
     <Card as="section" className="p-6">
       <SectionLabel className="mb-4">O que levar hoje</SectionLabel>
 
-      {recommendations.length === 0 ? (
-        <p className="text-sm text-ink/60 font-serif italic">
-          Sem alertas. Tempo confortável.
-        </p>
-      ) : (
+      {recommendations.length > 0 && (
         <ul className="flex flex-wrap gap-2.5">
           {recommendations.map((rec) => {
             const Icon = rec.icon
@@ -40,6 +38,16 @@ export default function WhatToWearCard({ today }) {
             )
           })}
         </ul>
+      )}
+
+      {mood && (
+        <p
+          className={`font-serif italic text-ink/65 text-sm leading-relaxed ${
+            recommendations.length > 0 ? 'mt-5' : ''
+          }`}
+        >
+          {mood}
+        </p>
       )}
     </Card>
   )
