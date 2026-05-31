@@ -5,12 +5,12 @@ import { useState } from 'react'
  *
  * Estrutura em camadas (de trás pra frente):
  *   1. Pílula com cor de fundo que transita (azul-petróleo ↔ grafite)
- *   2. Três arcos circulares grandes em baixa opacidade — efeito "horizonte"
- *      que dá profundidade radial
+ *   2. Três arcos circulares atrás do astro — discos translúcidos empilhados
+ *      criam um halo que segue o sol ou a lua conforme o estado
  *   3. Oito estrelas brancas (presentes em ambos os estados como no Figma,
  *      mas só visíveis no escuro porque no claro o azul-petróleo cobre)
- *   4. Duas camadas de nuvem azul-clara (uma cheia + uma translúcida atrás)
- *      no canto inferior — só no modo claro
+ *   4. Duas camadas de nuvem azul-clara (frente cheia + trás translúcida),
+ *      ocupando o canto inferior direito — só no modo claro
  *   5. Sol amarelo à esquerda no claro, ou lua cinza com 3 crateras à direita
  *      no escuro, com slide + crossfade entre os dois
  *
@@ -23,7 +23,6 @@ import { useState } from 'react'
  */
 
 // 8 estrelas espalhadas em padrão de constelação, em % da pílula.
-// Distribuídas pra cobrir tanto a esquerda (sob o sol no claro) quanto direita.
 const STARS = [
   { top: '18%', left: '10%', size: 4 },
   { top: '62%', left: '6%', size: 3 },
@@ -35,13 +34,17 @@ const STARS = [
   { top: '70%', left: '48%', size: 3 },
 ]
 
-// 3 crateras da lua, posições e tamanhos em px relativos à lua de 32×32.
-// Replicam o desenho original onde tem uma cratera maior + duas menores.
+// 3 crateras da lua, posições e tamanhos em px relativos à lua de 36×36.
 const CRATERS = [
-  { top: 6, left: 5, size: 6 },    // crater-1 (pequena, topo-esquerda)
-  { top: 14, left: 13, size: 12 }, // crater-2 (grande, centro-direita)
-  { top: 19, left: 4, size: 4 },   // crater-3 (mini, base-esquerda)
+  { top: 7, left: 6, size: 7 },     // crater-1 (pequena, topo-esquerda)
+  { top: 16, left: 15, size: 13 },  // crater-2 (grande, centro-direita)
+  { top: 22, left: 5, size: 5 },    // crater-3 (mini, base-esquerda)
 ]
+
+// Posições x do centro do astro (em px desde a esquerda da pílula).
+// Sol fica à esquerda (~22px do centro), lua à direita (~88px).
+const SUN_CENTER_X = 22
+const MOON_CENTER_X = 88
 
 export default function ThemeToggle() {
   const [isDark, setIsDark] = useState(false)
@@ -53,6 +56,18 @@ export default function ThemeToggle() {
   }
 
   const label = isDark ? 'Mudar para tema claro' : 'Mudar para tema escuro'
+  const centerX = isDark ? MOON_CENTER_X : SUN_CENTER_X
+
+  // Arcos centralizados em volta do astro. Como o astro muda de lado conforme
+  // o tema, os arcos animam o `left` junto. Tamanhos progressivos pra criar
+  // o efeito de halo radial em camadas.
+  const arcStyle = (sizePx) => ({
+    width: `${sizePx}px`,
+    height: `${sizePx}px`,
+    left: `${centerX - sizePx / 2}px`,
+    top: `${22 - sizePx / 2}px`,
+    transition: 'left 500ms ease-out',
+  })
 
   return (
     <button
@@ -73,24 +88,28 @@ export default function ThemeToggle() {
         ].join(', '),
       }}
     >
-      {/* Arcos do fundo — 3 círculos grandes em baixa opacidade. */}
+      {/* Halo — 3 discos translúcidos empilhados, centrados no astro.
+       * Tamanhos crescentes (110 → 80 → 56) criam camadas de claro/escuro. */}
       <img
         src="/theme-toggle/arc-3.svg"
         alt=""
         aria-hidden="true"
-        className="absolute -top-10 left-1/2 -translate-x-1/2 w-[140px] pointer-events-none"
+        className="absolute pointer-events-none"
+        style={arcStyle(110)}
       />
       <img
         src="/theme-toggle/arc-2.svg"
         alt=""
         aria-hidden="true"
-        className="absolute -top-7 left-1/2 -translate-x-1/2 w-[110px] pointer-events-none"
+        className="absolute pointer-events-none"
+        style={arcStyle(80)}
       />
       <img
         src="/theme-toggle/arc-1.svg"
         alt=""
         aria-hidden="true"
-        className="absolute -top-4 left-1/2 -translate-x-1/2 w-[80px] pointer-events-none"
+        className="absolute pointer-events-none"
+        style={arcStyle(56)}
       />
 
       {/* Estrelas — sempre renderizadas, só visíveis no escuro. */}
@@ -112,41 +131,43 @@ export default function ThemeToggle() {
         />
       ))}
 
-      {/* Nuvens — duas camadas (frente + trás translúcida), só no claro. */}
+      {/* Nuvens — duas camadas (frente + trás translúcida), só no claro.
+       * Bem largas pra dominar a metade direita como no Figma. */}
       <img
         src="/theme-toggle/cloud-back.svg"
         alt=""
         aria-hidden="true"
-        className={`absolute -bottom-0.5 -right-3 w-[100px] pointer-events-none transition-opacity duration-500 ${
-          isDark ? 'opacity-0' : 'opacity-70'
+        className={`absolute -bottom-0.5 -right-2 w-[125px] pointer-events-none transition-opacity duration-500 ${
+          isDark ? 'opacity-0' : 'opacity-75'
         }`}
       />
       <img
         src="/theme-toggle/cloud.svg"
         alt=""
         aria-hidden="true"
-        className={`absolute bottom-0 -right-2 w-[90px] pointer-events-none transition-opacity duration-500 ${
+        className={`absolute bottom-0 -right-1 w-[115px] pointer-events-none transition-opacity duration-500 ${
           isDark ? 'opacity-0' : 'opacity-100'
         }`}
       />
 
-      {/* Sol — esquerda no claro, desliza pra fora pela esquerda no escuro. */}
+      {/* Sol — esquerda no claro, desliza pra fora pela esquerda no escuro.
+       * w-9 h-9 = 36px (~82% da altura da pílula, como no Figma). */}
       <img
         src="/theme-toggle/sun.svg"
         alt=""
         aria-hidden="true"
-        className="absolute top-1/2 -translate-y-1/2 w-8 h-8 transition-all duration-500 ease-out pointer-events-none"
+        className="absolute top-1/2 -translate-y-1/2 w-9 h-9 transition-all duration-500 ease-out pointer-events-none"
         style={{
-          left: isDark ? '-30%' : '6px',
+          left: isDark ? '-30%' : '4px',
           opacity: isDark ? 0 : 1,
         }}
       />
 
-      {/* Lua + crateras — direita no escuro, desliza pra fora pela direita no claro. */}
+      {/* Lua + crateras — direita no escuro, desliza pra fora no claro. */}
       <div
-        className="absolute top-1/2 -translate-y-1/2 w-8 h-8 transition-all duration-500 ease-out pointer-events-none"
+        className="absolute top-1/2 -translate-y-1/2 w-9 h-9 transition-all duration-500 ease-out pointer-events-none"
         style={{
-          right: isDark ? '6px' : '-30%',
+          right: isDark ? '4px' : '-30%',
           opacity: isDark ? 1 : 0,
         }}
       >
