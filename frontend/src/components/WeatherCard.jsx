@@ -1,6 +1,7 @@
 import { Droplets, Thermometer, Wind } from 'lucide-react'
 import Card from './Card'
 import { getWeatherIcon } from '../utils/weatherIcons'
+import { useLiveCityTime } from '../hooks/useLiveCityTime'
 import { useRelativeTime } from '../hooks/useRelativeTime'
 
 /**
@@ -28,9 +29,9 @@ export default function WeatherCard({
     ? `${location.admin1}, ${location.country}`
     : location.country
   const relativeTime = useRelativeTime(fetchedAt)
-  // Hora local da cidade, vinda no fuso dela (sem offset). Slice é seguro
-  // porque o formato é sempre "YYYY-MM-DDTHH:MM:SS".
-  const localTime = current.time.slice(11, 16)
+  // Hora local "ticando" — atualiza a cada 30s adicionando o tempo passado
+  // desde fetchedAt à hora base que o backend retornou no fuso da cidade.
+  const localTime = useLiveCityTime(current.time, fetchedAt)
   const photo = photoFor(current.icon, isNight(current.time, today))
   const phrase = summary || `${capitalize(current.description)}.`
 
