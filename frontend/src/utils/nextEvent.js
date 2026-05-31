@@ -22,8 +22,16 @@ const RAIN_ICONS = new Set([
 
 const SUN_ICONS = new Set(['clear', 'mostly-clear'])
 
-function isRainy(icon) {
-  return RAIN_ICONS.has(icon)
+// A Open-Meteo às vezes mantém icon "cloudy" mesmo com 70-80% de chuva
+// (intensidade baixa). Considerar precipitation_probability evita esse cego.
+const RAIN_PROB_THRESHOLD = 40
+
+function isRainyHour(hour) {
+  if (RAIN_ICONS.has(hour.icon)) return true
+  return (
+    typeof hour.precipitation_probability === 'number' &&
+    hour.precipitation_probability >= RAIN_PROB_THRESHOLD
+  )
 }
 
 export function getNextWeatherEvent(hourly, currentTime, currentIcon) {
@@ -37,10 +45,14 @@ export function getNextWeatherEvent(hourly, currentTime, currentIcon) {
   const horizon = Math.min(startIdx + 24, hourly.length)
   const upcoming = hourly.slice(startIdx + 1, horizon)
 
-  const nowRaining = isRainy(currentIcon)
+  // Estado atual: chuvosa por ícone ou pela hora atual no hourly array.
+  const currentHour = hourly[startIdx]
+  const nowRaining =
+    RAIN_ICONS.has(currentIcon) ||
+    (currentHour && isRainyHour(currentHour))
 
   if (nowRaining) {
-    const next = upcoming.find((h) => !isRainy(h.icon))
+    const next = upcoming.find((h) => !isRainyHour(h))
     if (!next) return null
     return {
       type: SUN_ICONS.has(next.icon) ? 'sun' : 'dry',
@@ -48,7 +60,7 @@ export function getNextWeatherEvent(hourly, currentTime, currentIcon) {
     }
   }
 
-  const next = upcoming.find((h) => isRainy(h.icon))
+  const next = upcoming.find((h) => isRainyHour(h))
   if (!next) return null
   return {
     type: next.icon === 'thunderstorm' ? 'storm' : 'rain',
