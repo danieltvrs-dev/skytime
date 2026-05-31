@@ -167,9 +167,11 @@ function Dashboard({ data, fetchedAt }) {
         <DailyForecast daily={data.daily} />
       </div>
 
-      {/* Zona 3 (editorial dark): estável entre buscas pra o Leaflet não
-       * re-inicializar. A nova posição é animada pelo próprio mapa via setView. */}
-      <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
+      {/* Zona 3 (editorial dark): mapa pesa mais visualmente, então recebe
+       * 60% da largura (3fr) contra 40% (2fr) do gráfico de chuva.
+       * Estável entre buscas pra o Leaflet não re-inicializar — a nova posição
+       * é animada pelo próprio mapa via setView. */}
+      <div className="grid gap-6 lg:grid-cols-[3fr_2fr] lg:items-start">
         <CityMap
           latitude={data.location.latitude}
           longitude={data.location.longitude}
