@@ -1,22 +1,26 @@
-import { CloudRain, CloudSun, Sun, Zap } from 'lucide-react'
+import { CloudRain, CloudSun, Sunrise, Sun, Sunset, Zap } from 'lucide-react'
 import Card from './Card'
 import SectionLabel from './SectionLabel'
 import { useCountdown } from '../hooks/useCountdown'
-import { getNextWeatherEvent } from '../utils/nextEvent'
+import { getNextSolarEvent, getNextWeatherEvent } from '../utils/nextEvent'
 
 /**
- * Card pequeno com contagem regressiva pro próximo evento climatológico:
- * chuva chegando, sol voltando, trovoada se aproximando, ou tempo secando.
- *
- * Se não tem mudança prevista nas próximas 24h, o card não renderiza.
+ * Card pequeno com contagem regressiva pro próximo evento.
+ * Prioriza eventos climáticos (chuva/sol/trovoada); na ausência, cai no
+ * próximo marco solar (pôr ou nascer do sol) — sempre tem um.
  */
 export default function NextEventCard({
   hourly,
   currentTime,
   currentIcon,
   fetchedAt,
+  today,
+  tomorrow,
 }) {
-  const event = getNextWeatherEvent(hourly, currentTime, currentIcon)
+  const weatherEvent = getNextWeatherEvent(hourly, currentTime, currentIcon)
+  const solarEvent = getNextSolarEvent(today, tomorrow, currentTime)
+  const event = weatherEvent || solarEvent
+
   const countdown = useCountdown(event?.targetTime, currentTime, fetchedAt)
 
   if (!event || !countdown) return null
@@ -57,7 +61,12 @@ function describeEvent(type) {
     case 'sun':
       return { icon: Sun, label: 'Sol' }
     case 'dry':
-    default:
       return { icon: CloudSun, label: 'Tempo seco' }
+    case 'sunset':
+      return { icon: Sunset, label: 'Pôr do sol' }
+    case 'sunrise':
+      return { icon: Sunrise, label: 'Nascer do sol' }
+    default:
+      return { icon: CloudSun, label: 'Próximo evento' }
   }
 }

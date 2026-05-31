@@ -217,6 +217,8 @@ function Dashboard({ data, fetchedAt, isDefaultCity, onSetDefault }) {
               currentTime={data.current.time}
               currentIcon={data.current.icon}
               fetchedAt={fetchedAt}
+              today={data.daily[0]}
+              tomorrow={data.daily[1]}
             />
           </div>
           <GoldenHourCard today={data.daily[0]} />
