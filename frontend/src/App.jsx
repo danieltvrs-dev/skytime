@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { Route, Routes, useNavigate, useParams } from 'react-router-dom'
 import { CloudOff, RotateCw } from 'lucide-react'
 
 import Card from './components/Card'
@@ -22,14 +23,32 @@ import {
   getWeatherByCoords,
 } from './services/weather'
 import { buildDailySummary } from './utils/dailySummary'
+import { deslugify, slugify } from './utils/slug'
 
 function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<Skytime />} />
+      <Route path="/c/:slug" element={<Skytime />} />
+    </Routes>
+  )
+}
+
+function Skytime() {
+  const { slug } = useParams()
+  const navigate = useNavigate()
   // Cidade padrão persistida em localStorage. Se nunca foi setada,
   // cai em "São Paulo" como fallback.
   const [defaultCity, setDefaultCity] = useDefaultCity()
   // query.type: 'city' (busca por nome) ou 'coords' (geolocalização).
   // Um useEffect decide qual endpoint chamar baseado nisso.
-  const [query, setQuery] = useState(() => ({ type: 'city', value: defaultCity }))
+  const [query, setQuery] = useState(() => ({
+    type: 'city',
+    value: slug ? deslugify(slug) : defaultCity,
+  }))
+  // Rastreia o slug visto na última sincronização pra não reagir
+  // quando o slug não mudou de fato.
+  const lastSlugRef = useRef(slug)
   const [data, setData] = useState(null)
   const [fetchedAt, setFetchedAt] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -63,6 +82,18 @@ function App() {
     return () => { cancelled = true }
   }, [query])
 
+  // Sincroniza slug da URL pro query. Quando o usuário navega (search,
+  // chip do histórico, back/forward), a URL muda e este efeito puxa o
+  // novo estado. Geolocalização não passa por aqui — atualiza query direto.
+  useEffect(() => {
+    if (slug === lastSlugRef.current) return
+    lastSlugRef.current = slug
+    setQuery({
+      type: 'city',
+      value: slug ? deslugify(slug) : defaultCity,
+    })
+  }, [slug, defaultCity])
+
   // Re-tentar é só forçar uma nova referência de `query` pra reexecutar o useEffect.
   // Mais simples que um state separado só pra incrementar contador.
   const handleRetry = () => setQuery((prev) => ({ ...prev }))
@@ -75,8 +106,10 @@ function App() {
     return () => { cancelled = true }
   }, [historyVersion])
 
+  // Busca por cidade navega pra /c/slug; o useEffect de slug atualiza query.
+  // Mantém o histórico do browser funcionando (back/forward).
   const handleSearch = (cityName) => {
-    setQuery({ type: 'city', value: cityName })
+    navigate(`/c/${slugify(cityName)}`)
   }
 
   const handleUseLocation = async () => {
