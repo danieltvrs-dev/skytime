@@ -1,6 +1,7 @@
 import { Droplets, Pin, PinOff, Thermometer, Wind } from 'lucide-react'
 import Card from './Card'
 import CityClock from './CityClock'
+import ShareButton from './ShareButton'
 import { useUnits } from '../contexts/UnitsContext'
 import { useRelativeTime } from '../hooks/useRelativeTime'
 import { formatTemp, formatWind } from '../utils/units'
@@ -70,30 +71,33 @@ export default function WeatherCard({
                 atualizado {relativeTime}
               </p>
             )}
-            {onSetDefault && (
-              <button
-                type="button"
-                onClick={onSetDefault}
-                disabled={isDefaultCity}
-                className={`mt-3 inline-flex items-center gap-1.5 text-[11px] tracking-wide uppercase transition ${
-                  isDefaultCity
-                    ? 'text-amber cursor-default'
-                    : 'text-ink/45 hover:text-ink'
-                }`}
-              >
-                {isDefaultCity ? (
-                  <>
-                    <Pin className="w-3 h-3" strokeWidth={2.5} aria-hidden="true" />
-                    Cidade padrão
-                  </>
-                ) : (
-                  <>
-                    <PinOff className="w-3 h-3" strokeWidth={2} aria-hidden="true" />
-                    Definir como padrão
-                  </>
-                )}
-              </button>
-            )}
+            <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2">
+              {onSetDefault && (
+                <button
+                  type="button"
+                  onClick={onSetDefault}
+                  disabled={isDefaultCity}
+                  className={`inline-flex items-center gap-1.5 text-[11px] tracking-wide uppercase transition ${
+                    isDefaultCity
+                      ? 'text-amber cursor-default'
+                      : 'text-ink/45 hover:text-ink'
+                  }`}
+                >
+                  {isDefaultCity ? (
+                    <>
+                      <Pin className="w-3 h-3" strokeWidth={2.5} aria-hidden="true" />
+                      Cidade padrão
+                    </>
+                  ) : (
+                    <>
+                      <PinOff className="w-3 h-3" strokeWidth={2} aria-hidden="true" />
+                      Definir como padrão
+                    </>
+                  )}
+                </button>
+              )}
+              <ShareButton cityName={location.name} />
+            </div>
           </div>
 
           <dl className="grid grid-cols-3 gap-4 pt-6 border-t border-ink/10 mt-auto">
