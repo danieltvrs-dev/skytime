@@ -45,7 +45,7 @@ export default function WeatherCard({
                 </h2>
                 <p className="text-ink/55 text-sm mt-1.5">{region}</p>
               </div>
-              <CityClock baseTime={current.time} fetchedAt={fetchedAt} size={56} />
+              <CityClock baseTime={current.time} fetchedAt={fetchedAt} size={72} />
             </div>
             <Icon
               className="w-14 h-14 shrink-0 text-ink/75"
