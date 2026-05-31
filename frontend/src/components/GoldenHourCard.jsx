@@ -62,12 +62,15 @@ function SunMoment({ icon: Icon, label, time }) {
 }
 
 function WindowGroup({ label, morning, evening, accent }) {
-  const titleColor = accent === 'amber' ? 'text-amber' : 'text-ink/70'
   return (
     <div>
-      <p
-        className={`text-[11px] font-medium uppercase tracking-wider mb-2 ${titleColor}`}
-      >
+      <p className="text-[11px] font-medium uppercase tracking-wider mb-2 text-ink/70 flex items-center gap-1.5">
+        {accent === 'amber' && (
+          <span
+            className="inline-block w-1.5 h-1.5 rounded-full bg-amber shrink-0"
+            aria-hidden="true"
+          />
+        )}
         {label}
       </p>
       <div className="flex flex-col gap-1.5 text-sm text-ink/75 tabular-nums">
