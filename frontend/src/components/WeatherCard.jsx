@@ -82,21 +82,23 @@ export default function WeatherCard({
           </dl>
         </div>
 
-        {/* Coluna direita: foto + frase editorial (desktop only) */}
+        {/* Coluna direita: foto com borda própria + frase editorial (desktop only) */}
         <div
-          className="hidden lg:flex items-end relative min-h-[28rem] overflow-hidden"
+          className="hidden lg:flex p-8"
           aria-label="Painel atmosférico"
         >
-          <img
-            src={photo}
-            alt=""
-            className="absolute inset-0 w-full h-full object-cover"
-            loading="eager"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-ink/75 via-ink/30 to-transparent" />
-          <p className="relative p-10 font-serif italic text-paper text-2xl tracking-tight leading-snug drop-shadow-md">
-            {phrase}
-          </p>
+          <div className="relative flex-1 min-h-[20rem] overflow-hidden rounded-2xl flex items-end">
+            <img
+              src={photo}
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover"
+              loading="eager"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-ink/75 via-ink/30 to-transparent" />
+            <p className="relative p-8 font-serif italic text-paper text-2xl tracking-tight leading-snug drop-shadow-md">
+              {phrase}
+            </p>
+          </div>
         </div>
       </div>
     </Card>
