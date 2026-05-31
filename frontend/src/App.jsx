@@ -204,8 +204,10 @@ function Dashboard({ data, fetchedAt, isDefaultCity, onSetDefault }) {
           </p>
         )}
 
-        {/* Zona 2: features editoriais lado a lado em desktop. */}
-        <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
+        {/* Zona 2: features editoriais lado a lado em desktop.
+         * Sem items-start aqui: os dois cards estiram pra mesma altura e o
+         * WhatToWearCard usa mt-auto na frase pra ela pousar no rodapé. */}
+        <div className="grid gap-6 lg:grid-cols-2">
           <WhatToWearCard today={data.daily[0]} />
           <GoldenHourCard today={data.daily[0]} />
         </div>

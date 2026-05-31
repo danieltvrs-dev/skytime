@@ -16,7 +16,7 @@ export default function WhatToWearCard({ today }) {
   const mood = useMemo(() => getDayMood(today), [today])
 
   return (
-    <Card as="section" className="p-6">
+    <Card as="section" className="p-6 flex flex-col">
       <SectionLabel className="mb-4">O que levar hoje</SectionLabel>
 
       {recommendations.length > 0 && (
@@ -40,10 +40,12 @@ export default function WhatToWearCard({ today }) {
         </ul>
       )}
 
+      {/* mt-auto empurra a frase pro rodapé do card, equilibrando visualmente
+       * com o GoldenHourCard ao lado quando ele é mais alto. */}
       {mood && (
         <p
-          className={`font-serif italic text-ink/65 text-sm leading-relaxed ${
-            recommendations.length > 0 ? 'mt-5' : ''
+          className={`font-serif italic text-ink/65 text-sm leading-relaxed mt-auto ${
+            recommendations.length > 0 ? 'pt-6' : ''
           }`}
         >
           {mood}
