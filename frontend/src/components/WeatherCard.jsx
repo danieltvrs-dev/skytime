@@ -28,6 +28,9 @@ export default function WeatherCard({
     ? `${location.admin1}, ${location.country}`
     : location.country
   const relativeTime = useRelativeTime(fetchedAt)
+  // Hora local da cidade, vinda no fuso dela (sem offset). Slice é seguro
+  // porque o formato é sempre "YYYY-MM-DDTHH:MM:SS".
+  const localTime = current.time.slice(11, 16)
   const photo = photoFor(current.icon, isNight(current.time, today))
   const phrase = summary || `${capitalize(current.description)}.`
 
@@ -42,6 +45,9 @@ export default function WeatherCard({
                 {location.name}
               </h2>
               <p className="text-ink/55 text-sm mt-1.5">{region}</p>
+              <p className="text-ink/45 text-xs mt-1 tabular-nums">
+                {localTime}
+              </p>
             </div>
             <Icon
               className="w-14 h-14 shrink-0 text-ink/75"
