@@ -99,17 +99,16 @@ function App() {
 
   return (
     <main className="mx-auto max-w-6xl px-5 lg:px-8 py-10 space-y-8">
-      <header>
-        <h1 className="font-display text-4xl font-bold tracking-tight text-ink">
+      <header className="flex flex-col gap-4 lg:flex-row lg:items-center lg:gap-8">
+        <h1 className="font-display text-4xl font-bold tracking-tight text-ink shrink-0">
           Skytime
         </h1>
+        <SearchBar
+          onSearch={handleSearch}
+          onUseLocation={handleUseLocation}
+          isLocating={geo.loading}
+        />
       </header>
-
-      <SearchBar
-        onSearch={handleSearch}
-        onUseLocation={handleUseLocation}
-        isLocating={geo.loading}
-      />
 
       <SearchHistory
         entries={history}
