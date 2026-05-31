@@ -1,29 +1,40 @@
-import { CloudRain, CloudSun, Sunrise, Sun, Sunset, Zap } from 'lucide-react'
+import { CloudOff, CloudRain, CloudSun, Sun, Zap } from 'lucide-react'
 import Card from './Card'
 import SectionLabel from './SectionLabel'
 import { useCountdown } from '../hooks/useCountdown'
-import { getNextSolarEvent, getNextWeatherEvent } from '../utils/nextEvent'
+import { getNextWeatherEvent } from '../utils/nextEvent'
 
 /**
- * Card pequeno com contagem regressiva pro próximo evento.
- * Prioriza eventos climáticos (chuva/sol/trovoada); na ausência, cai no
- * próximo marco solar (pôr ou nascer do sol) — sempre tem um.
+ * Card com contagem regressiva pro próximo evento climatológico.
+ * Quando não tem nada mudando nas próximas 24h, mostra mensagem simples.
  */
 export default function NextEventCard({
   hourly,
   currentTime,
   currentIcon,
   fetchedAt,
-  today,
-  tomorrow,
 }) {
-  const weatherEvent = getNextWeatherEvent(hourly, currentTime, currentIcon)
-  const solarEvent = getNextSolarEvent(today, tomorrow, currentTime)
-  const event = weatherEvent || solarEvent
-
+  const event = getNextWeatherEvent(hourly, currentTime, currentIcon)
   const countdown = useCountdown(event?.targetTime, currentTime, fetchedAt)
 
-  if (!event || !countdown) return null
+  // Sem evento ou já passou: mensagem amigável
+  if (!event || !countdown) {
+    return (
+      <Card as="section" className="p-6">
+        <SectionLabel className="mb-4">Próximo evento</SectionLabel>
+        <div className="flex items-center gap-4">
+          <CloudOff
+            className="w-10 h-10 text-ink/30 shrink-0"
+            strokeWidth={1.5}
+            aria-hidden="true"
+          />
+          <p className="font-serif italic text-ink/70 text-base leading-snug">
+            Sem mudanças previstas nas próximas 24 horas.
+          </p>
+        </div>
+      </Card>
+    )
+  }
 
   const { icon: EventIcon, label } = describeEvent(event.type)
   const hh = String(countdown.hours).padStart(2, '0')
@@ -61,12 +72,7 @@ function describeEvent(type) {
     case 'sun':
       return { icon: Sun, label: 'Sol' }
     case 'dry':
-      return { icon: CloudSun, label: 'Tempo seco' }
-    case 'sunset':
-      return { icon: Sunset, label: 'Pôr do sol' }
-    case 'sunrise':
-      return { icon: Sunrise, label: 'Nascer do sol' }
     default:
-      return { icon: CloudSun, label: 'Próximo evento' }
+      return { icon: CloudSun, label: 'Tempo seco' }
   }
 }
