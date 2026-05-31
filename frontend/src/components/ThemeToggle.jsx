@@ -36,12 +36,12 @@ const STARS = [
   { top: '70%', left: '48%', size: 4 },
 ]
 
-// 3 crateras da lua, posições e tamanhos em px relativos à lua de 64×64.
+// 3 crateras da lua, posições e tamanhos em px relativos à lua de 48×48.
 // Replicam o desenho original onde tem uma cratera maior + duas menores.
 const CRATERS = [
-  { top: 12, left: 10, size: 12 }, // crater-1 (pequena, topo-esquerda)
-  { top: 30, left: 26, size: 22 }, // crater-2 (grande, centro-direita)
-  { top: 38, left: 8, size: 8 },   // crater-3 (mini, base-esquerda)
+  { top: 9, left: 8, size: 9 },    // crater-1 (pequena, topo-esquerda)
+  { top: 22, left: 20, size: 17 }, // crater-2 (grande, centro-direita)
+  { top: 28, left: 6, size: 6 },   // crater-3 (mini, base-esquerda)
 ]
 
 export default function ThemeToggle() {
@@ -63,14 +63,14 @@ export default function ThemeToggle() {
       aria-checked={isDark}
       aria-label={label}
       title={label}
-      className="relative w-[220px] h-[88px] rounded-full overflow-hidden transition-colors duration-500 focus:outline-none focus:ring-2 focus:ring-amber/40 shrink-0"
+      className="relative w-[160px] h-[64px] rounded-full overflow-hidden transition-colors duration-500 focus:outline-none focus:ring-2 focus:ring-amber/40 shrink-0"
       style={{
         backgroundColor: isDark ? '#32383A' : '#006786',
         boxShadow: [
-          'inset -2px 6px 8px rgba(0,0,0,0.45)',
-          'inset 0 -5px 4px rgba(0,0,0,0.4)',
-          '0 4px 4px rgba(0,0,0,0.35)',
-          '0 -3px 4px rgba(0,0,0,0.25)',
+          'inset -1px 4px 6px rgba(0,0,0,0.45)',
+          'inset 0 -3px 3px rgba(0,0,0,0.4)',
+          '0 3px 3px rgba(0,0,0,0.35)',
+          '0 -2px 3px rgba(0,0,0,0.25)',
         ].join(', '),
       }}
     >
@@ -81,19 +81,19 @@ export default function ThemeToggle() {
         src="/theme-toggle/arc-3.svg"
         alt=""
         aria-hidden="true"
-        className="absolute -top-20 left-1/2 -translate-x-1/2 w-[280px] pointer-events-none"
+        className="absolute -top-14 left-1/2 -translate-x-1/2 w-[200px] pointer-events-none"
       />
       <img
         src="/theme-toggle/arc-2.svg"
         alt=""
         aria-hidden="true"
-        className="absolute -top-14 left-1/2 -translate-x-1/2 w-[220px] pointer-events-none"
+        className="absolute -top-10 left-1/2 -translate-x-1/2 w-[160px] pointer-events-none"
       />
       <img
         src="/theme-toggle/arc-1.svg"
         alt=""
         aria-hidden="true"
-        className="absolute -top-8 left-1/2 -translate-x-1/2 w-[160px] pointer-events-none"
+        className="absolute -top-6 left-1/2 -translate-x-1/2 w-[116px] pointer-events-none"
       />
 
       {/* Estrelas — sempre renderizadas (espelha o Figma), mas só visíveis
@@ -122,7 +122,7 @@ export default function ThemeToggle() {
         src="/theme-toggle/cloud-back.svg"
         alt=""
         aria-hidden="true"
-        className={`absolute -bottom-2 -right-6 w-[200px] pointer-events-none transition-opacity duration-500 ${
+        className={`absolute -bottom-1 -right-4 w-[145px] pointer-events-none transition-opacity duration-500 ${
           isDark ? 'opacity-0' : 'opacity-70'
         }`}
       />
@@ -130,7 +130,7 @@ export default function ThemeToggle() {
         src="/theme-toggle/cloud.svg"
         alt=""
         aria-hidden="true"
-        className={`absolute -bottom-1 -right-4 w-[180px] pointer-events-none transition-opacity duration-500 ${
+        className={`absolute -bottom-0.5 -right-3 w-[130px] pointer-events-none transition-opacity duration-500 ${
           isDark ? 'opacity-0' : 'opacity-100'
         }`}
       />
@@ -140,9 +140,9 @@ export default function ThemeToggle() {
         src="/theme-toggle/sun.svg"
         alt=""
         aria-hidden="true"
-        className="absolute top-1/2 -translate-y-1/2 w-16 h-16 transition-all duration-500 ease-out pointer-events-none"
+        className="absolute top-1/2 -translate-y-1/2 w-12 h-12 transition-all duration-500 ease-out pointer-events-none"
         style={{
-          left: isDark ? '-30%' : '10px',
+          left: isDark ? '-30%' : '7px',
           opacity: isDark ? 0 : 1,
         }}
       />
@@ -150,9 +150,9 @@ export default function ThemeToggle() {
       {/* Lua + crateras — direita no escuro, desliza pra fora pela direita no
        * claro. Container relative pra craters posicionarem absolutas dentro. */}
       <div
-        className="absolute top-1/2 -translate-y-1/2 w-16 h-16 transition-all duration-500 ease-out pointer-events-none"
+        className="absolute top-1/2 -translate-y-1/2 w-12 h-12 transition-all duration-500 ease-out pointer-events-none"
         style={{
-          right: isDark ? '10px' : '-30%',
+          right: isDark ? '7px' : '-30%',
           opacity: isDark ? 1 : 0,
         }}
       >
