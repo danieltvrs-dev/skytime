@@ -1,7 +1,7 @@
 import { Droplets, Thermometer, Wind } from 'lucide-react'
 import Card from './Card'
+import CityClock from './CityClock'
 import { getWeatherIcon } from '../utils/weatherIcons'
-import { useLiveCityTime } from '../hooks/useLiveCityTime'
 import { useRelativeTime } from '../hooks/useRelativeTime'
 
 /**
@@ -29,9 +29,6 @@ export default function WeatherCard({
     ? `${location.admin1}, ${location.country}`
     : location.country
   const relativeTime = useRelativeTime(fetchedAt)
-  // Hora local "ticando" — atualiza a cada 30s adicionando o tempo passado
-  // desde fetchedAt à hora base que o backend retornou no fuso da cidade.
-  const localTime = useLiveCityTime(current.time, fetchedAt)
   const photo = photoFor(current.icon, isNight(current.time, today))
   const phrase = summary || `${capitalize(current.description)}.`
 
@@ -41,14 +38,14 @@ export default function WeatherCard({
         {/* Coluna esquerda: dados */}
         <div className="p-8 flex flex-col">
           <header className="flex items-start justify-between gap-4 mb-8">
-            <div>
-              <h2 className="font-serif text-3xl text-ink leading-none tracking-tight">
-                {location.name}
-              </h2>
-              <p className="text-ink/55 text-sm mt-1.5">{region}</p>
-              <p className="text-ink/45 text-xs mt-1 tabular-nums">
-                {localTime}
-              </p>
+            <div className="flex items-start gap-4">
+              <div>
+                <h2 className="font-serif text-3xl text-ink leading-none tracking-tight">
+                  {location.name}
+                </h2>
+                <p className="text-ink/55 text-sm mt-1.5">{region}</p>
+              </div>
+              <CityClock baseTime={current.time} fetchedAt={fetchedAt} size={56} />
             </div>
             <Icon
               className="w-14 h-14 shrink-0 text-ink/75"
