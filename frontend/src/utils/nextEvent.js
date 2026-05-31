@@ -45,11 +45,12 @@ export function getNextWeatherEvent(hourly, currentTime, currentIcon) {
   const horizon = Math.min(startIdx + 24, hourly.length)
   const upcoming = hourly.slice(startIdx + 1, horizon)
 
-  // Estado atual: chuvosa por ícone ou pela hora atual no hourly array.
-  const currentHour = hourly[startIdx]
-  const nowRaining =
-    RAIN_ICONS.has(currentIcon) ||
-    (currentHour && isRainyHour(currentHour))
+  // "Agora chovendo" só pelo ícone — usar probabilidade aqui faria com que
+  // dias inteiros com 50%+ de chance ficassem trancados em "sempre chovendo",
+  // sem nunca achar uma janela seca pra anunciar.
+  // A probabilidade entra só no `isRainyHour` das horas FUTURAS, onde ela
+  // serve pra detectar chuva que o ícone "cloudy" mascarou.
+  const nowRaining = RAIN_ICONS.has(currentIcon)
 
   if (nowRaining) {
     const next = upcoming.find((h) => !isRainyHour(h))
