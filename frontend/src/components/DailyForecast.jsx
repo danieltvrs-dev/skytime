@@ -1,7 +1,9 @@
 import Card from './Card'
 import SectionLabel from './SectionLabel'
-import { getWeatherIcon } from '../utils/weatherIcons'
+import { useUnits } from '../contexts/UnitsContext'
 import { formatDailyLabel } from '../utils/dateFormat'
+import { formatTemp } from '../utils/units'
+import { getWeatherIcon } from '../utils/weatherIcons'
 
 /**
  * Previsão dos próximos dias — Zona 3 (editorial) da jornada.
@@ -24,6 +26,7 @@ export default function DailyForecast({ daily }) {
 function DailyRow({ day, isToday }) {
   const Icon = getWeatherIcon(day.icon)
   const label = isToday ? 'Hoje' : formatDailyLabel(day.date)
+  const { tempUnit } = useUnits()
 
   return (
     <li className="flex items-center gap-4 py-3.5">
@@ -42,10 +45,10 @@ function DailyRow({ day, isToday }) {
       <span className="flex-1" />
       <span className="text-sm tabular-nums">
         <span className="font-medium text-paper">
-          {Math.round(day.temperature_max)}°
+          {formatTemp(day.temperature_max, tempUnit)}°
         </span>
         <span className="text-paper/50 ml-3">
-          {Math.round(day.temperature_min)}°
+          {formatTemp(day.temperature_min, tempUnit)}°
         </span>
       </span>
     </li>

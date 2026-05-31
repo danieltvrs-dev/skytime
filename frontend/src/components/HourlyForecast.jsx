@@ -1,6 +1,8 @@
 import Card from './Card'
 import SectionLabel from './SectionLabel'
+import { useUnits } from '../contexts/UnitsContext'
 import { formatHour } from '../utils/dateFormat'
+import { formatTemp } from '../utils/units'
 import { getWeatherIcon } from '../utils/weatherIcons'
 
 const HOURS_TO_SHOW = 24
@@ -33,6 +35,7 @@ export default function HourlyForecast({ hourly, currentTime }) {
 function HourPoint({ hour, isNow }) {
   const Icon = getWeatherIcon(hour.icon)
   const label = isNow ? 'Agora' : formatHour(hour.time)
+  const { tempUnit } = useUnits()
 
   return (
     <li className="flex flex-col items-center min-w-12 gap-1.5">
@@ -49,7 +52,7 @@ function HourPoint({ hour, isNow }) {
         aria-hidden="true"
       />
       <span className="text-sm font-medium text-paper tabular-nums">
-        {Math.round(hour.temperature)}°
+        {formatTemp(hour.temperature, tempUnit)}°
       </span>
     </li>
   )

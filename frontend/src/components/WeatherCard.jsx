@@ -1,8 +1,10 @@
 import { Droplets, Pin, PinOff, Thermometer, Wind } from 'lucide-react'
 import Card from './Card'
 import CityClock from './CityClock'
-import { getWeatherIcon } from '../utils/weatherIcons'
+import { useUnits } from '../contexts/UnitsContext'
 import { useRelativeTime } from '../hooks/useRelativeTime'
+import { formatTemp, formatWind } from '../utils/units'
+import { getWeatherIcon } from '../utils/weatherIcons'
 
 /**
  * Hero da Zona 1 — Skytime.
@@ -31,6 +33,7 @@ export default function WeatherCard({
     ? `${location.admin1}, ${location.country}`
     : location.country
   const relativeTime = useRelativeTime(fetchedAt)
+  const { tempUnit, windUnit, setTempUnit, setWindUnit } = useUnits()
   const photo = photoFor(current.icon, isNight(current.time, today))
   const phrase = summary || `${capitalize(current.description)}.`
 
@@ -58,7 +61,7 @@ export default function WeatherCard({
 
           <div className="mb-8">
             <p className="font-serif text-ink tracking-tight leading-none text-8xl lg:text-9xl">
-              {Math.round(current.temperature)}
+              {formatTemp(current.temperature, tempUnit)}
               <span className="text-amber">°</span>
             </p>
             <p className="text-ink/70 mt-3 text-base">{current.description}</p>
@@ -97,7 +100,7 @@ export default function WeatherCard({
             <Stat
               icon={Thermometer}
               label="Sensação"
-              value={`${Math.round(current.apparent_temperature)}°`}
+              value={`${formatTemp(current.apparent_temperature, tempUnit)}°`}
             />
             <Stat
               icon={Droplets}
@@ -107,9 +110,30 @@ export default function WeatherCard({
             <Stat
               icon={Wind}
               label="Vento"
-              value={`${Math.round(current.wind_speed)} km/h`}
+              value={formatWind(current.wind_speed, windUnit)}
             />
           </dl>
+
+          {/* Toggle compacto de unidades — bottom-right do card data */}
+          <div className="flex items-center justify-end gap-3 mt-4 text-[11px] tracking-wide">
+            <UnitToggle
+              current={tempUnit}
+              options={[
+                { value: 'C', label: '°C' },
+                { value: 'F', label: '°F' },
+              ]}
+              onChange={setTempUnit}
+            />
+            <span className="text-ink/15">·</span>
+            <UnitToggle
+              current={windUnit}
+              options={[
+                { value: 'kmh', label: 'km/h' },
+                { value: 'mph', label: 'mph' },
+              ]}
+              onChange={setWindUnit}
+            />
+          </div>
         </div>
 
         {/* Coluna direita: foto com borda própria + frase editorial (desktop only) */}
@@ -132,6 +156,30 @@ export default function WeatherCard({
         </div>
       </div>
     </Card>
+  )
+}
+
+function UnitToggle({ current, options, onChange }) {
+  return (
+    <div className="inline-flex items-center gap-1">
+      {options.map((opt, i) => (
+        <span key={opt.value} className="inline-flex items-center gap-1">
+          {i > 0 && <span className="text-ink/15">/</span>}
+          <button
+            type="button"
+            onClick={() => onChange(opt.value)}
+            disabled={current === opt.value}
+            className={
+              current === opt.value
+                ? 'text-ink font-medium'
+                : 'text-ink/40 hover:text-ink/70'
+            }
+          >
+            {opt.label}
+          </button>
+        </span>
+      ))}
+    </div>
   )
 }
 
