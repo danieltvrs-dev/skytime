@@ -150,9 +150,16 @@ function Skytime() {
       <header className="flex flex-col gap-4 lg:flex-row lg:items-center lg:gap-8">
         <div className="flex items-center gap-4">
           <MenuButton onClick={() => setSidebarOpen(true)} />
-          <h1 className="font-display text-4xl font-bold tracking-tight text-ink shrink-0">
-            Skytime
-          </h1>
+          <div className="flex items-center gap-2 shrink-0">
+            <img
+              src="/favicon.svg"
+              alt="Logo Skytime"
+              className="w-10 h-10"
+            />
+            <h1 className="font-display text-4xl font-bold tracking-tight text-ink">
+              Skytime
+            </h1>
+          </div>
         </div>
         <SearchBar
           onSearch={handleSearch}
