@@ -10,10 +10,11 @@ import GoldenHourCard from './components/GoldenHourCard'
 import HourlyForecast from './components/HourlyForecast'
 import NextEventCard from './components/NextEventCard'
 import RainTimeline from './components/RainTimeline'
+import MenuButton from './components/MenuButton'
 import SearchBar from './components/SearchBar'
 import SearchHistory from './components/SearchHistory'
+import Sidebar from './components/Sidebar'
 import SkeletonDashboard from './components/SkeletonDashboard'
-import ThemeToggle from './components/ThemeToggle'
 import WeatherCard from './components/WeatherCard'
 import WhatToWearCard from './components/WhatToWearCard'
 import { useDefaultCity } from './hooks/useDefaultCity'
@@ -42,6 +43,9 @@ function Skytime() {
   // Cidade padrão persistida em localStorage. Se nunca foi setada,
   // cai em "São Paulo" como fallback.
   const [defaultCity, setDefaultCity] = useDefaultCity()
+  // Sidebar de preferências (experimento visual — substitui o ThemeToggle
+  // no header e abre da esquerda com backdrop).
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   // query.type: 'city' (busca por nome) ou 'coords' (geolocalização).
   // Um useEffect decide qual endpoint chamar baseado nisso.
   const [query, setQuery] = useState(() => ({
@@ -141,17 +145,20 @@ function Skytime() {
   }
 
   return (
-    <main className="mx-auto max-w-6xl px-5 lg:px-8 py-10 space-y-8">
+    <>
+      <main className="mx-auto max-w-6xl px-5 lg:px-8 py-10 space-y-8">
       <header className="flex flex-col gap-4 lg:flex-row lg:items-center lg:gap-8">
-        <h1 className="font-display text-4xl font-bold tracking-tight text-ink shrink-0">
-          Skytime
-        </h1>
+        <div className="flex items-center gap-4">
+          <MenuButton onClick={() => setSidebarOpen(true)} />
+          <h1 className="font-display text-4xl font-bold tracking-tight text-ink shrink-0">
+            Skytime
+          </h1>
+        </div>
         <SearchBar
           onSearch={handleSearch}
           onUseLocation={handleUseLocation}
           isLocating={geo.loading}
         />
-        <ThemeToggle />
       </header>
 
       <SearchHistory
@@ -172,7 +179,9 @@ function Skytime() {
           onSetDefault={handleSetDefaultCity}
         />
       )}
-    </main>
+      </main>
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+    </>
   )
 }
 
