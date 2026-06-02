@@ -1,21 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80">
   <!-- Tile arredondado Sky Deep -->
-  <rect width="512" height="512" rx="112" ry="112" fill="#0A4DA3"/>
+  <rect x="0" y="0" width="80" height="80" rx="16" fill="#0A4DA3"/>
 
-  <!-- Sol cream no canto superior direito (vazado do tile, igual à nuvem) -->
-  <circle cx="378" cy="134" r="52" fill="#F7F4EE"/>
+  <!-- Nuvem cream (curva Bézier orgânica do design original V1) -->
+  <path d="M22 52 Q14 52 14 44 Q14 36 24 36 Q26 26 38 26 Q50 26 52 36 Q62 36 62 44 Q62 52 56 52 Z" fill="#F7F4EE"/>
 
-  <!-- Nuvem cream: composição de bumps arredondadas + base reta -->
-  <g fill="#F7F4EE">
-    <rect x="118" y="282" width="280" height="80" rx="40"/>
-    <circle cx="182" cy="270" r="56"/>
-    <circle cx="254" cy="232" r="72"/>
-    <circle cx="332" cy="262" r="58"/>
-  </g>
+  <!-- Sol cream no canto superior direito -->
+  <circle cx="60" cy="24" r="7" fill="#F7F4EE"/>
 
-  <!-- Ponteiros do relógio dentro da nuvem, em Sky Deep -->
-  <g stroke="#0A4DA3" stroke-width="16" stroke-linecap="round" fill="none">
-    <line x1="252" y1="268" x2="252" y2="318"/>
-    <line x1="252" y1="268" x2="204" y2="268"/>
-  </g>
+  <!-- Ponteiros do relógio em sky-deep dentro do corpo da nuvem -->
+  <line x1="37" y1="42" x2="37" y2="34" stroke="#0A4DA3" stroke-width="2.6" stroke-linecap="round"/>
+  <line x1="37" y1="42" x2="44" y2="45" stroke="#0A4DA3" stroke-width="2.6" stroke-linecap="round"/>
+  <circle cx="37" cy="42" r="1.7" fill="#0A4DA3"/>
 </svg>
