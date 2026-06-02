@@ -2,6 +2,7 @@ import { Droplets, Pin, PinOff, Thermometer, Wind } from 'lucide-react'
 import Card from './Card'
 import CityClock from './CityClock'
 import ShareButton from './ShareButton'
+import UnitsMenu from './UnitsMenu'
 import { useUnits } from '../contexts/UnitsContext'
 import { useRelativeTime } from '../hooks/useRelativeTime'
 import { formatTemp, formatWind } from '../utils/units'
@@ -34,7 +35,7 @@ export default function WeatherCard({
     ? `${location.admin1}, ${location.country}`
     : location.country
   const relativeTime = useRelativeTime(fetchedAt)
-  const { tempUnit, windUnit, setTempUnit, setWindUnit } = useUnits()
+  const { tempUnit, windUnit } = useUnits()
   const photo = photoFor(current.icon, isNight(current.time, today))
   const phrase = summary || `${capitalize(current.description)}.`
 
@@ -100,43 +101,27 @@ export default function WeatherCard({
             </div>
           </div>
 
-          <dl className="grid grid-cols-3 gap-4 pt-6 border-t border-ink/10 mt-auto">
-            <Stat
-              icon={Thermometer}
-              label="Sensação"
-              value={`${formatTemp(current.apparent_temperature, tempUnit)}°`}
-            />
-            <Stat
-              icon={Droplets}
-              label="Umidade"
-              value={`${current.humidity}%`}
-            />
-            <Stat
-              icon={Wind}
-              label="Vento"
-              value={formatWind(current.wind_speed, windUnit)}
-            />
-          </dl>
-
-          {/* Toggle compacto de unidades — bottom-right do card data */}
-          <div className="flex items-center justify-end gap-3 mt-4 text-[11px] tracking-wide">
-            <UnitToggle
-              current={tempUnit}
-              options={[
-                { value: 'C', label: '°C' },
-                { value: 'F', label: '°F' },
-              ]}
-              onChange={setTempUnit}
-            />
-            <span className="text-ink/15">·</span>
-            <UnitToggle
-              current={windUnit}
-              options={[
-                { value: 'kmh', label: 'km/h' },
-                { value: 'mph', label: 'mph' },
-              ]}
-              onChange={setWindUnit}
-            />
+          <div className="relative pt-6 border-t border-border mt-auto">
+            {/* Engrenagem de preferências de unidade, sobre o divisor.
+             * Posicionada absoluta pra "cortar" a linha no canto direito. */}
+            <UnitsMenu className="absolute -top-3.5 right-0" />
+            <dl className="grid grid-cols-3 gap-4">
+              <Stat
+                icon={Thermometer}
+                label="Sensação"
+                value={`${formatTemp(current.apparent_temperature, tempUnit)}°`}
+              />
+              <Stat
+                icon={Droplets}
+                label="Umidade"
+                value={`${current.humidity}%`}
+              />
+              <Stat
+                icon={Wind}
+                label="Vento"
+                value={formatWind(current.wind_speed, windUnit)}
+              />
+            </dl>
           </div>
         </div>
 
@@ -160,30 +145,6 @@ export default function WeatherCard({
         </div>
       </div>
     </Card>
-  )
-}
-
-function UnitToggle({ current, options, onChange }) {
-  return (
-    <div className="inline-flex items-center gap-1">
-      {options.map((opt, i) => (
-        <span key={opt.value} className="inline-flex items-center gap-1">
-          {i > 0 && <span className="text-ink/15">/</span>}
-          <button
-            type="button"
-            onClick={() => onChange(opt.value)}
-            disabled={current === opt.value}
-            className={
-              current === opt.value
-                ? 'text-ink font-medium'
-                : 'text-ink/40 hover:text-ink/70'
-            }
-          >
-            {opt.label}
-          </button>
-        </span>
-      ))}
-    </div>
   )
 }
 
