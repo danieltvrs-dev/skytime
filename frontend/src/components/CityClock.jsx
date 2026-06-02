@@ -74,7 +74,7 @@ export default function CityClock({ baseTime, fetchedAt, size = 64 }) {
 
       {/* Digital miúdo na parte inferior do relógio (dentro do aro) */}
       <span
-        className="absolute left-1/2 -translate-x-1/2 text-[8px] font-medium tabular-nums text-ink/55 bg-white/85 px-1 rounded leading-none py-0.5"
+        className="absolute left-1/2 -translate-x-1/2 text-[8px] font-medium tabular-nums text-ink/55 bg-surface/85 px-1 rounded leading-none py-0.5"
         style={{ bottom: '15%' }}
       >
         {time}
