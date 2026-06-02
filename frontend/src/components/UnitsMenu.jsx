@@ -40,25 +40,30 @@ export default function UnitsMenu({ className = '' }) {
     return () => window.removeEventListener('keydown', handleKey)
   }, [open])
 
+  // Estrutura aninhada: o wrapper externo recebe className do consumidor
+  // (geralmente posicionamento absolute). O wrapper interno é relative pra
+  // o popover ancorar. Sem isso, Tailwind tem conflito entre `relative` e
+  // `absolute` no mesmo elemento.
   return (
-    <div ref={containerRef} className={`relative ${className}`}>
-      <button
-        type="button"
-        onClick={() => setOpen((prev) => !prev)}
-        aria-label="Preferências de unidades"
-        aria-expanded={open}
-        aria-haspopup="menu"
-        title="Unidades"
-        className="p-1.5 rounded-lg bg-surface text-ink/55 hover:text-ink hover:bg-ink/5 focus:outline-none focus:ring-2 focus:ring-amber/30 transition"
-      >
-        <Settings className="w-4 h-4" strokeWidth={1.75} aria-hidden="true" />
-      </button>
-
-      {open && (
-        <div
-          role="menu"
-          className="absolute right-0 top-full mt-2 w-44 rounded-2xl bg-surface/95 backdrop-blur-sm border border-border shadow-lg py-2 z-20"
+    <div ref={containerRef} className={className}>
+      <div className="relative">
+        <button
+          type="button"
+          onClick={() => setOpen((prev) => !prev)}
+          aria-label="Preferências de unidades"
+          aria-expanded={open}
+          aria-haspopup="menu"
+          title="Unidades"
+          className="p-1.5 rounded-lg bg-surface text-ink/55 hover:text-ink hover:bg-ink/5 focus:outline-none focus:ring-2 focus:ring-amber/30 transition"
         >
+          <Settings className="w-4 h-4" strokeWidth={1.75} aria-hidden="true" />
+        </button>
+
+        {open && (
+          <div
+            role="menu"
+            className="absolute right-0 top-full mt-2 w-44 rounded-2xl bg-surface/95 backdrop-blur-sm border border-border shadow-lg py-2 z-20"
+          >
           <UnitGroup
             label="Temperatura"
             current={tempUnit}
@@ -78,8 +83,9 @@ export default function UnitsMenu({ className = '' }) {
               { value: 'mph', label: 'mph' },
             ]}
           />
-        </div>
-      )}
+          </div>
+        )}
+      </div>
     </div>
   )
 }
