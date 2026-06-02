@@ -56,18 +56,18 @@ export default function Sidebar({ isOpen, onClose }) {
         role="dialog"
         aria-modal="true"
         aria-label="Preferências"
-        className={`fixed top-0 left-0 h-full w-full sm:w-80 bg-cream shadow-2xl z-50 transition-transform duration-300 ease-out ${
+        className={`fixed top-0 left-0 h-full w-full sm:w-80 bg-surface shadow-2xl z-50 transition-transform duration-300 ease-out ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         {/* Cabeçalho da sidebar — título + botão fechar */}
-        <header className="flex items-center justify-between px-5 py-4 border-b border-navy/10">
+        <header className="flex items-center justify-between px-5 py-4 border-b border-border">
           <h2 className="font-serif text-xl text-ink">Preferências</h2>
           <button
             type="button"
             onClick={onClose}
             aria-label="Fechar menu"
-            className="p-2 rounded-xl text-ink/70 hover:text-amber hover:bg-navy/5 focus:outline-none focus:ring-2 focus:ring-amber/30 transition"
+            className="p-2 rounded-xl text-ink/70 hover:text-amber hover:bg-ink/5 focus:outline-none focus:ring-2 focus:ring-amber/30 transition"
           >
             <X className="w-5 h-5" strokeWidth={1.75} aria-hidden="true" />
           </button>

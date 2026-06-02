@@ -91,16 +91,16 @@ function SkeletonHourly() {
 function SkeletonDaily() {
   return (
     <Card variant="dark" className="p-6 animate-pulse">
-      <div className="h-3 w-32 bg-paper/15 rounded mb-4" />
+      <div className="h-3 w-32 bg-cream/15 rounded mb-4" />
       {Array.from({ length: 5 }).map((_, i) => (
         <div
           key={i}
-          className="flex items-center gap-4 py-3.5 border-t border-paper/10 first:border-t-0"
+          className="flex items-center gap-4 py-3.5 border-t border-cream/10 first:border-t-0"
         >
-          <div className="h-4 w-20 bg-paper/15 rounded" />
-          <div className="h-6 w-6 bg-paper/15 rounded-full" />
+          <div className="h-4 w-20 bg-cream/15 rounded" />
+          <div className="h-6 w-6 bg-cream/15 rounded-full" />
           <div className="flex-1" />
-          <div className="h-4 w-20 bg-paper/15 rounded" />
+          <div className="h-4 w-20 bg-cream/15 rounded" />
         </div>
       ))}
     </Card>

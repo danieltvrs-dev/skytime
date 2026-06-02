@@ -13,7 +13,7 @@ export default function MenuButton({ onClick }) {
       onClick={onClick}
       aria-label="Abrir menu de preferências"
       title="Menu"
-      className="p-2.5 rounded-2xl bg-white/75 backdrop-blur-sm border border-navy/20 text-ink/70 hover:text-amber hover:border-amber/40 focus:outline-none focus:ring-2 focus:ring-amber/20 transition shrink-0"
+      className="p-2.5 rounded-2xl bg-surface/75 backdrop-blur-sm border border-border text-ink/70 hover:text-amber hover:border-amber/40 focus:outline-none focus:ring-2 focus:ring-amber/20 transition shrink-0"
     >
       <svg
         width="20"
