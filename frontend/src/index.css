@@ -1,41 +1,77 @@
 @import "tailwindcss";
 @import "leaflet/dist/leaflet.css";
 
+/* Habilita o prefixo `dark:` do Tailwind 4 via classe .dark no <html>.
+ * Sem isto, `dark:` reagiria apenas a prefers-color-scheme do sistema. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* ---------------------------------------------------------------------------
- * Design tokens do Skytime — paleta "Hora Dourada"
+ * Tokens do Skytime
  *
- * Conceito espacial: jornada vertical do off-white quente (topo, atmosférico)
- * até o grafite (rodapé, editorial), com âmbar como único acento cromático.
- * Os utilitários do Tailwind herdam essas variáveis via @theme.
+ * Dois tipos:
+ *   1. Cores de marca (sun, sky, sky-deep, navy, cream, sky-soft):
+ *      fixas, identidade visual da marca, não mudam em dark mode.
+ *   2. Tokens semânticos (surface, text, border, body-*): valores diferentes
+ *      em light e dark mode. Definidos com valores light aqui em @theme,
+ *      sobrescritos no bloco .dark abaixo.
+ *
+ * Componentes devem usar tokens semânticos (bg-surface, text-text, etc) em
+ * vez de cores literais (bg-cream, text-navy) sempre que a cor depender do
+ * modo. Cores de marca continuam OK pra elementos sempre iguais (botão
+ * de ação âmbar, links sky, etc).
+ *
+ * Os aliases legados (ink, paper, graphite, amber, sand) viram apelidos
+ * dos tokens semânticos. Componentes que já usam text-ink, bg-paper,
+ * bg-graphite ganham dark mode de graça.
  * ------------------------------------------------------------------------- */
 @theme {
-  /* Paleta Skytime — Identidade V1.
-   * Azul céu como base, sol âmbar como acento quente, navy pra profundidade.
-   * Cream mantém o fundo respirável e não-clínico. */
-  --color-sky-deep: #0A4DA3;     /* primária — fundo do logo, identidade */
+  /* Cores de marca — fixas em ambos os modos */
+  --color-sky-deep: #0A4DA3;     /* primária — fundo do logo */
   --color-sky: #1E5CFF;          /* ação / links */
-  --color-sun: #F9A03F;          /* acento âmbar — sol */
-  --color-navy: #0B1B3D;         /* texto sobre claro / dark mode */
-  --color-cream: #F7F4EE;        /* fundo claro */
-  --color-sky-soft: #BFDBFE;     /* apoio — azul muito claro pra hovers/states */
+  --color-sun: #F9A03F;          /* acento âmbar */
+  --color-navy: #0B1B3D;         /* navy referência */
+  --color-cream: #F7F4EE;        /* cream referência */
+  --color-sky-soft: #BFDBFE;     /* apoio azul muito claro */
 
-  /* Aliases legados.
-   * Mantêm os componentes (que usam ink, paper, amber, graphite, sand)
-   * funcionando sem refactor massivo. As cores antigas viram apelidos pra
-   * a nova paleta — basta uma cor da marca aparecer numa classe Tailwind
-   * (ex: text-ink) pro CSS resolver pra navy via var(). */
-  --color-ink: var(--color-navy);
-  --color-paper: var(--color-cream);
+  /* Tokens semânticos — valores LIGHT (override dark embaixo) */
+  --color-surface: #F7F4EE;                       /* fundo principal de cards */
+  --color-surface-hero: rgba(255, 255, 255, 0.8); /* hero variant (white/80) */
+  --color-surface-deep: #0B1B3D;                  /* Zona 3 dark cards */
+  --color-text: #0B1B3D;                          /* texto principal */
+  --color-text-soft: rgba(11, 27, 61, 0.55);      /* texto secundário */
+  --color-border: rgba(11, 27, 61, 0.15);         /* bordas de cards */
+  --color-body-top: #BFDBFE;                      /* gradiente do body, topo */
+  --color-body-bottom: #0B1B3D;                   /* gradiente do body, fundo */
+
+  /* Aliases legados — ressignificados como semânticos */
+  --color-ink: var(--color-text);
+  --color-paper: var(--color-surface);
   --color-amber: var(--color-sun);
-  --color-graphite: var(--color-navy);
+  --color-graphite: var(--color-surface-deep);
   --color-sand: var(--color-sky-soft);
 
   /* Famílias tipográficas */
   --font-serif: "Fraunces", Georgia, "Times New Roman", serif;
   --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
-  /* Outfit é a fonte do wordmark "skytime" definida na identidade V1.
-   * Usar exclusivamente no h1 e contextos de marca, não em UI ou dados. */
+  /* Outfit é a fonte do wordmark "skytime" da identidade V1.
+   * Usar exclusivamente no h1 e contextos de marca. */
   --font-display: "Outfit", "Inter", system-ui, sans-serif;
+}
+
+/* Overrides do modo escuro. A classe .dark é aplicada no <html> pelo
+ * ThemeContext quando o usuário ativa o tema escuro.
+ *
+ * Estratégia: manter o ritmo das zonas (Zona 1 mais clara que Zona 3
+ * mesmo no dark) usando 3 tons de profundidade pros surfaces. */
+.dark {
+  --color-surface: #142347;                          /* navy arejado pros cards */
+  --color-surface-hero: rgba(26, 44, 84, 0.85);      /* tom acima pra hierarquia */
+  --color-surface-deep: #080F25;                     /* quase preto pra Zona 3 */
+  --color-text: #F7F4EE;                             /* cream */
+  --color-text-soft: rgba(247, 244, 238, 0.65);      /* cream secundário */
+  --color-border: rgba(247, 244, 238, 0.15);         /* bordas claras */
+  --color-body-top: #0B1B3D;                         /* navy vira o céu noturno */
+  --color-body-bottom: #050B1F;                      /* quase preto profundo */
 }
 
 html, body, #root {
@@ -85,20 +121,23 @@ html, body, #root {
 
 body {
   font-family: var(--font-sans);
-  color: var(--color-ink);
+  color: var(--color-text);
 
-  /* Gradiente vertical da identidade Skytime:
-   * sky-soft no topo (céu de dia) → navy no fundo (céu de noite).
-   * Renderizado uma única vez sobre 160vh; depois disso, fallback navy. */
-  background-color: var(--color-navy);
+  /* Gradiente vertical da identidade Skytime.
+   * Tokens body-top e body-bottom mudam por modo: no claro vai de
+   * sky-soft pra navy; no escuro vai de navy pra quase preto. */
+  background-color: var(--color-body-bottom);
   background-image: linear-gradient(
     to bottom,
-    var(--color-sky-soft) 0%,
-    var(--color-sky-soft) 40%,
-    var(--color-navy) 100%
+    var(--color-body-top) 0%,
+    var(--color-body-top) 40%,
+    var(--color-body-bottom) 100%
   );
   background-size: 100% 160vh;
   background-repeat: no-repeat;
+
+  /* Transição suave quando o usuário troca de tema. */
+  transition: background-color 400ms ease, color 400ms ease;
 
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;

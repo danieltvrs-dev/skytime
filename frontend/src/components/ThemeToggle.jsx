@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useTheme } from '../contexts/ThemeContext'
 
 /**
  * Botão de alternar tema (claro/escuro), refeito fiel à referência do Figma.
@@ -16,8 +16,8 @@ import { useState } from 'react'
  *
  * Tamanho 110×44 — alinhado à altura do botão de geolocalização do header.
  *
- * Esta etapa cobre só o visual; o tema do site ainda não muda. O `isDark` é
- * estado local provisório — próximo commit migra pra contexto global.
+ * Conectado ao ThemeContext: o clique alterna o tema real do site, que
+ * aplica a classe .dark no <html> e persiste em localStorage.
  *
  * Assets em frontend/public/theme-toggle/.
  */
@@ -47,13 +47,8 @@ const SUN_CENTER_X = 22
 const MOON_CENTER_X = 88
 
 export default function ThemeToggle() {
-  const [isDark, setIsDark] = useState(false)
-
-  const handleClick = () => {
-    setIsDark((prev) => !prev)
-    // placeholder — wiring real entra no próximo commit
-    console.log('toggle theme')
-  }
+  const { theme, toggleTheme } = useTheme()
+  const isDark = theme === 'dark'
 
   const label = isDark ? 'Mudar para tema claro' : 'Mudar para tema escuro'
   const centerX = isDark ? MOON_CENTER_X : SUN_CENTER_X
@@ -72,7 +67,7 @@ export default function ThemeToggle() {
   return (
     <button
       type="button"
-      onClick={handleClick}
+      onClick={toggleTheme}
       role="switch"
       aria-checked={isDark}
       aria-label={label}
