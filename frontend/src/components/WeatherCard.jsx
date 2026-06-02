@@ -152,8 +152,8 @@ export default function WeatherCard({
               className="absolute inset-0 w-full h-full object-cover"
               loading="eager"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-ink/75 via-ink/30 to-transparent" />
-            <p className="relative p-8 font-serif italic text-paper text-2xl tracking-tight leading-snug drop-shadow-md">
+            <div className="absolute inset-0 bg-gradient-to-t from-navy/75 via-navy/30 to-transparent" />
+            <p className="relative p-8 font-serif italic text-cream text-2xl tracking-tight leading-snug drop-shadow-md">
               {phrase}
             </p>
           </div>

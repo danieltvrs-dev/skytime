@@ -6,12 +6,16 @@
  * Variantes:
  *   light     — fundo translúcido claro (Zonas 2: WhatToWear, GoldenHour, Hourly)
  *   lightHero — fundo um pouco mais opaco (Zona 1: WeatherCard, ErrorState)
- *   dark      — fundo grafite com texto paper (Zona 3: DailyForecast, RainTimeline)
+ *   dark      — fundo grafite com texto cream (Zona 3: DailyForecast, RainTimeline)
+ *
+ * Usa tokens semânticos (surface, surface-deep, border) que mudam de valor
+ * automaticamente no dark mode via .dark no <html>. A variant `dark` ganha
+ * fundo ainda mais escuro no modo escuro pra manter o ritmo entre Zona 1 e 3.
  */
 const VARIANTS = {
-  light: 'bg-white/70 backdrop-blur-sm border border-navy/15 shadow-sm',
-  lightHero: 'bg-white/80 backdrop-blur-sm border border-navy/15 shadow-sm',
-  dark: 'bg-navy text-cream border border-cream/10 shadow-md',
+  light: 'bg-surface/70 backdrop-blur-sm border border-border shadow-sm',
+  lightHero: 'bg-surface/80 backdrop-blur-sm border border-border shadow-sm',
+  dark: 'bg-surface-deep text-cream border border-cream/10 shadow-md',
 }
 
 export default function Card({

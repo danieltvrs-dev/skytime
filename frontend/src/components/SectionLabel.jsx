@@ -3,12 +3,12 @@
  * Usado como h3 padrão dentro de Cards.
  *
  * Tom:
- *   light — sobre fundos claros (text-ink/55)
- *   dark  — sobre fundos escuros (text-paper/50)
+ *   light — sobre fundos claros (usa token semântico de texto)
+ *   dark  — sobre fundos escuros (sempre cream, independente do modo)
  */
 const TONES = {
   light: 'text-ink/55',
-  dark: 'text-paper/50',
+  dark: 'text-cream/50',
 }
 
 export default function SectionLabel({
