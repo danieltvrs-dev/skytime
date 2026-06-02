@@ -41,17 +41,17 @@ function HourPoint({ hour, isNow }) {
     <li className="flex flex-col items-center min-w-12 gap-1.5">
       <span
         className={`text-xs tabular-nums ${
-          isNow ? 'text-amber font-medium' : 'text-paper/55'
+          isNow ? 'text-amber font-medium' : 'text-cream/55'
         }`}
       >
         {label}
       </span>
       <Icon
-        className="w-5 h-5 text-paper/75"
+        className="w-5 h-5 text-cream/75"
         strokeWidth={1.5}
         aria-hidden="true"
       />
-      <span className="text-sm font-medium text-paper tabular-nums">
+      <span className="text-sm font-medium text-cream tabular-nums">
         {formatTemp(hour.temperature, tempUnit)}°
       </span>
     </li>

@@ -33,17 +33,17 @@ export default function RainTimeline({ hourly, currentTime }) {
       </SectionLabel>
 
       {maxProb < RAIN_NOISE_THRESHOLD ? (
-        <p className="font-serif italic text-paper/60 text-sm">
+        <p className="font-serif italic text-cream/60 text-sm">
           Sem chuva prevista nas próximas 12 horas.
         </p>
       ) : (
         <div className="relative h-32">
           {/* Linha de referência em 50% */}
           <div
-            className="absolute inset-x-0 top-1/2 border-t border-dashed border-paper/15 pointer-events-none"
+            className="absolute inset-x-0 top-1/2 border-t border-dashed border-cream/15 pointer-events-none"
             aria-hidden="true"
           >
-            <span className="absolute -top-2 right-0 bg-ink px-1 text-[9px] text-paper/40 tabular-nums">
+            <span className="absolute -top-2 right-0 bg-surface-deep px-1 text-[9px] text-cream/40 tabular-nums">
               50%
             </span>
           </div>
@@ -60,7 +60,7 @@ export default function RainTimeline({ hourly, currentTime }) {
         {next.map((hour, index) => (
           <span
             key={hour.time}
-            className="flex-1 text-center text-[10px] text-paper/50 tabular-nums"
+            className="flex-1 text-center text-[10px] text-cream/50 tabular-nums"
           >
             {index === 0 ? 'agora' : formatHour(hour.time)}
           </span>

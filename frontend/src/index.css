@@ -61,17 +61,24 @@
 /* Overrides do modo escuro. A classe .dark é aplicada no <html> pelo
  * ThemeContext quando o usuário ativa o tema escuro.
  *
- * Estratégia: manter o ritmo das zonas (Zona 1 mais clara que Zona 3
- * mesmo no dark) usando 3 tons de profundidade pros surfaces. */
+ * Estratégia de hierarquia em 3 tons (do mais claro pro mais escuro):
+ *   surface       → cards da Zona 1 e 2 (mais arejado)
+ *   surface-hero  → variante hero, ligeiramente mais opaco
+ *   surface-deep  → cards Zona 3 (escuros mas legíveis, NÃO próximos do body)
+ *   body-top      → topo do gradiente do body
+ *   body-bottom   → fundo do gradiente (mais escuro de tudo)
+ *
+ * Os surfaces precisam ficar claramente mais claros que o body pra cards
+ * "flutuarem" e pra texto em opacidade média ainda ter contraste. */
 .dark {
-  --color-surface: #142347;                          /* navy arejado pros cards */
-  --color-surface-hero: rgba(26, 44, 84, 0.85);      /* tom acima pra hierarquia */
-  --color-surface-deep: #080F25;                     /* quase preto pra Zona 3 */
+  --color-surface: #1A2C54;                          /* navy arejado pros cards */
+  --color-surface-hero: rgba(35, 52, 95, 0.85);      /* tom acima pra hierarquia */
+  --color-surface-deep: #142345;                     /* darker mas ainda destaca */
   --color-text: #F7F4EE;                             /* cream */
-  --color-text-soft: rgba(247, 244, 238, 0.65);      /* cream secundário */
-  --color-border: rgba(247, 244, 238, 0.15);         /* bordas claras */
+  --color-text-soft: rgba(247, 244, 238, 0.72);      /* mais opacidade pra ler */
+  --color-border: rgba(247, 244, 238, 0.18);         /* bordas mais visíveis */
   --color-body-top: #0B1B3D;                         /* navy vira o céu noturno */
-  --color-body-bottom: #050B1F;                      /* quase preto profundo */
+  --color-body-bottom: #040814;                      /* quase preto profundo */
 }
 
 html, body, #root {

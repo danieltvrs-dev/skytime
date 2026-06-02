@@ -14,7 +14,7 @@ export default function DailyForecast({ daily }) {
   return (
     <Card as="section" variant="dark" className="p-6">
       <SectionLabel tone="dark" className="mb-5">Próximos dias</SectionLabel>
-      <ul className="divide-y divide-paper/10">
+      <ul className="divide-y divide-cream/10">
         {daily.map((day, index) => (
           <DailyRow key={day.date} day={day} isToday={index === 0} />
         ))}
@@ -32,22 +32,22 @@ function DailyRow({ day, isToday }) {
     <li className="flex items-center gap-4 py-3.5">
       <span
         className={`w-20 text-sm ${
-          isToday ? 'font-serif italic text-amber' : 'font-medium text-paper'
+          isToday ? 'font-serif italic text-amber' : 'font-medium text-cream'
         }`}
       >
         {label}
       </span>
       <Icon
-        className="w-6 h-6 shrink-0 text-paper/80"
+        className="w-6 h-6 shrink-0 text-cream/80"
         strokeWidth={1.5}
         aria-label={day.description}
       />
       <span className="flex-1" />
       <span className="text-sm tabular-nums">
-        <span className="font-medium text-paper">
+        <span className="font-medium text-cream">
           {formatTemp(day.temperature_max, tempUnit)}°
         </span>
-        <span className="text-paper/50 ml-3">
+        <span className="text-cream/50 ml-3">
           {formatTemp(day.temperature_min, tempUnit)}°
         </span>
       </span>

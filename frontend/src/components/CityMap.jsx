@@ -43,7 +43,7 @@ export default function CityMap({ latitude, longitude, cityName }) {
 
   return (
     <div
-      className="rounded-3xl overflow-hidden border border-paper/10 shadow-md h-64 lg:h-full min-h-[16rem]"
+      className="rounded-3xl overflow-hidden border border-cream/10 shadow-md h-64 lg:h-full min-h-[16rem]"
       aria-label={`Mapa de ${cityName}`}
     >
       <MapContainer

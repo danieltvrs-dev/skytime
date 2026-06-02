@@ -4,13 +4,13 @@
  */
 export default function Footer() {
   return (
-    <footer className="mt-8 pt-8 border-t border-paper/10 text-paper/55 text-sm">
+    <footer className="mt-8 pt-8 border-t border-cream/10 text-cream/55 text-sm">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <p className="font-serif italic text-lg text-paper/75 leading-snug">
+          <p className="font-serif italic text-lg text-cream/75 leading-snug">
             Skytime
           </p>
-          <p className="mt-1 text-xs text-paper/45 tracking-wide">
+          <p className="mt-1 text-xs text-cream/45 tracking-wide">
             Seu céu, minuto a minuto.
           </p>
         </div>
@@ -30,7 +30,7 @@ export default function Footer() {
             <Link href="https://github.com/danieltvrs-dev/skytime">
               Código no GitHub
             </Link>
-            <span className="text-paper/30 mx-2">·</span>
+            <span className="text-cream/30 mx-2">·</span>
             {new Date().getFullYear()}
           </p>
         </div>
