@@ -1,9 +1,14 @@
+import { useEffect, useRef, useState } from 'react'
 import { useLiveCityTime } from '../hooks/useLiveCityTime'
 
 /**
  * Relógio analógico mini com hora digital dentro do aro.
  * Referência direta ao logo do Skytime: aro + ponteiros + sol no canto superior
  * direito (igual ao sol no canto do tile do logo).
+ *
+ * Pulse: quando fetchedAt muda (auto-refresh ou nova cidade), um halo âmbar
+ * expande e some em ~700ms — sinaliza "dados atualizaram" sem ser intrusivo.
+ * Não dispara no carregamento inicial (só quando há valor anterior + diferente).
  *
  * Props:
  *   baseTime:  string ISO "YYYY-MM-DDTHH:MM:SS" no fuso da cidade
@@ -12,6 +17,21 @@ import { useLiveCityTime } from '../hooks/useLiveCityTime'
  */
 export default function CityClock({ baseTime, fetchedAt, size = 64 }) {
   const time = useLiveCityTime(baseTime, fetchedAt)
+
+  // Dispara o pulse só em mudanças subsequentes de fetchedAt.
+  const prevFetchedAtRef = useRef(fetchedAt)
+  const [pulseKey, setPulseKey] = useState(0)
+  useEffect(() => {
+    if (
+      prevFetchedAtRef.current &&
+      fetchedAt &&
+      fetchedAt !== prevFetchedAtRef.current
+    ) {
+      setPulseKey((k) => k + 1)
+    }
+    prevFetchedAtRef.current = fetchedAt
+  }, [fetchedAt])
+
   if (!time) return null
 
   const [hh, mm] = time.split(':').map(Number)
@@ -37,6 +57,22 @@ export default function CityClock({ baseTime, fetchedAt, size = 64 }) {
           strokeWidth="1.5"
           opacity="0.3"
         />
+
+        {/* Halo de pulse no auto-refresh — só renderiza após primeira atualização.
+         * key força remount → animação CSS reroda do zero a cada nova mudança. */}
+        {pulseKey > 0 && (
+          <circle
+            key={pulseKey}
+            cx="50"
+            cy="50"
+            r="44"
+            fill="none"
+            stroke="#F9A03F"
+            strokeWidth="2"
+            className="skytime-clock-pulse"
+            aria-hidden="true"
+          />
+        )}
 
         {/* 12 marcadores de hora ao redor do aro */}
         {Array.from({ length: 12 }).map((_, i) => (

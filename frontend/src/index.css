@@ -146,6 +146,24 @@ html, body, #root {
 .reduce-motion .skytime-card { transition: none; }
 .reduce-motion .skytime-card:hover { transform: none; box-shadow: inherit; }
 
+/* Pulse no CityClock quando auto-refresh atualiza dados. Um halo âmbar
+ * expande e some em 700ms. Usa transform-box: fill-box pra a origem da
+ * escala ser o centro do círculo SVG. */
+@keyframes skytime-clock-pulse {
+  0% { transform: scale(1); opacity: 0.5; }
+  100% { transform: scale(1.35); opacity: 0; }
+}
+.skytime-clock-pulse {
+  transform-origin: 50% 50%;
+  transform-box: fill-box;
+  animation: skytime-clock-pulse 700ms ease-out forwards;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .skytime-clock-pulse { animation: none; opacity: 0; }
+}
+.reduce-motion .skytime-clock-pulse { animation: none; opacity: 0; }
+
 body {
   font-family: var(--font-sans);
   color: var(--color-text);
