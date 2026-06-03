@@ -58,7 +58,13 @@ export default function CityMap({ latitude, longitude, cityName }) {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
           url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
         />
-        <Marker position={position} icon={cityPin} />
+        {/* key derivada da lat/lng força remount do Marker quando a posição
+         * muda — Leaflet recria a DOM e a animação CSS de drop roda fresca. */}
+        <Marker
+          key={`${position[0]},${position[1]}`}
+          position={position}
+          icon={cityPin}
+        />
         <RecenterOnChange position={position} />
       </MapContainer>
     </div>
