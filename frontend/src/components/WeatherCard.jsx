@@ -140,9 +140,10 @@ export default function WeatherCard({
         >
           <div className="relative flex-1 min-h-[20rem] overflow-hidden rounded-2xl flex items-end">
             <img
+              key={photo}
               src={photo}
               alt=""
-              className="absolute inset-0 w-full h-full object-cover"
+              className="absolute inset-0 w-full h-full object-cover skytime-photo"
               loading="eager"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-navy/75 via-navy/30 to-transparent" />

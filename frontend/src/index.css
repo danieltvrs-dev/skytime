@@ -107,6 +107,21 @@ html, body, #root {
 }
 .reduce-motion .skytime-marker { animation: none; }
 
+/* Fade-in das fotos do céu no WeatherCard. O key={photo} no <img> força
+ * remount quando muda a foto (cidade nova ou ícone diferente), e a animação
+ * roda no novo elemento — sensação de "entrar" suave em vez de pop. */
+@keyframes skytime-photo-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.skytime-photo {
+  animation: skytime-photo-fade-in 500ms ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .skytime-photo { animation: none; }
+}
+.reduce-motion .skytime-photo { animation: none; }
+
 /* Animação stagger: filhos diretos aparecem em cascata.
  * Usada no Dashboard pra dar ritmo de chegada quando o usuário troca de cidade. */
 @keyframes skytime-fade-up {
