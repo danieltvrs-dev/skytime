@@ -136,16 +136,21 @@ export default function SearchBar({
                   onClick={() => handleSelectSuggestion(suggestion)}
                   role="option"
                   aria-selected={false}
-                  className="w-full flex items-baseline gap-2 px-4 py-2.5 text-left hover:bg-ink/5 transition"
+                  className="w-full flex flex-col items-start gap-0.5 px-4 py-2.5 text-left hover:bg-ink/5 transition"
                 >
-                  <span className="font-medium text-ink truncate">
+                  {/* Nome em linha cheia, sem truncate — permite wrap pra
+                   * cidades de nome longo aparecerem por inteiro. */}
+                  <span className="font-medium text-ink leading-tight">
                     {suggestion.name}
                   </span>
-                  <span className="text-ink/55 text-xs truncate">
-                    {[suggestion.admin1, suggestion.country]
-                      .filter(Boolean)
-                      .join(', ')}
-                  </span>
+                  {/* Região e país embaixo em texto menor. */}
+                  {(suggestion.admin1 || suggestion.country) && (
+                    <span className="text-ink/55 text-xs leading-tight">
+                      {[suggestion.admin1, suggestion.country]
+                        .filter(Boolean)
+                        .join(', ')}
+                    </span>
+                  )}
                 </button>
               </li>
             ))}
