@@ -62,7 +62,7 @@ export default function UnitsMenu({ className = '' }) {
         {open && (
           <div
             role="menu"
-            className="absolute right-0 top-full mt-2 w-44 rounded-2xl bg-surface/95 backdrop-blur-sm border border-border shadow-lg py-2 z-20"
+            className="absolute right-0 bottom-full mb-2 w-44 rounded-2xl bg-surface/95 backdrop-blur-sm border border-border shadow-lg py-2 z-30"
           >
           <UnitGroup
             label="Temperatura"
