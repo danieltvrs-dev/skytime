@@ -223,11 +223,18 @@ function Skytime() {
         onDelete={handleDeleteHistoryEntry}
       />
 
-      {loading && <SkeletonDashboard />}
+      {/* Estados de renderização:
+       * - Skeleton: só no PRIMEIRO carregamento (loading + sem dados).
+       *   Ao trocar de cidade, mantém Dashboard com os dados antigos visíveis
+       *   durante o fetch novo — assim animações de transição (número da temp,
+       *   pulse do clock, fade da foto) têm como rodar entre estados.
+       * - Erro: substitui Dashboard quando há erro e não está mais carregando.
+       * - Dashboard: aparece sempre que há dados e nenhum erro pendente. */}
+      {loading && !data && <SkeletonDashboard />}
       {error && !loading && (
         <ErrorState error={error} onRetry={handleRetry} />
       )}
-      {data && !loading && !error && (
+      {data && !error && (
         <Dashboard
           data={data}
           fetchedAt={fetchedAt}
