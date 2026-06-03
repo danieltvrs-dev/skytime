@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { X } from 'lucide-react'
 
 import Switch from './Switch'
@@ -26,6 +26,13 @@ import { useMotion } from '../contexts/MotionContext'
  */
 export default function Sidebar({ isOpen, onClose }) {
   const { reduceMotion, setReduceMotion } = useMotion()
+  // Contador que incrementa cada vez que a sidebar abre. Vira `key` no
+  // container das seções — força remount, fazendo o stagger CSS rodar do
+  // zero a cada abertura (sem isso, a animação só rodaria na primeira vez).
+  const [openCount, setOpenCount] = useState(0)
+  useEffect(() => {
+    if (isOpen) setOpenCount((c) => c + 1)
+  }, [isOpen])
 
   // ESC fecha a sidebar. Listener só ativo enquanto aberta.
   useEffect(() => {
@@ -99,8 +106,13 @@ export default function Sidebar({ isOpen, onClose }) {
         </header>
 
         {/* Conteúdo — flex-1 ocupa todo o espaço disponível, com scroll
-         * se precisar quando a sidebar ganhar mais seções. */}
-        <div className="flex-1 overflow-y-auto px-5 py-6 space-y-8">
+         * se precisar quando a sidebar ganhar mais seções. As seções entram
+         * em cascata (animate-stagger) cada vez que a sidebar abre, via
+         * key incrementando que força remount. */}
+        <div
+          key={openCount}
+          className="flex-1 overflow-y-auto px-5 py-6 space-y-8 animate-stagger"
+        >
           <section>
             <h3 className="text-xs font-medium uppercase tracking-wider text-ink/55 mb-3">
               Tema
