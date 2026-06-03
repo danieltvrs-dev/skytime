@@ -4,6 +4,7 @@ import CityClock from './CityClock'
 import ShareButton from './ShareButton'
 import UnitsMenu from './UnitsMenu'
 import { useUnits } from '../contexts/UnitsContext'
+import { useAnimatedNumber } from '../hooks/useAnimatedNumber'
 import { useRelativeTime } from '../hooks/useRelativeTime'
 import { formatTemp, formatWind } from '../utils/units'
 import { getWeatherIcon } from '../utils/weatherIcons'
@@ -36,6 +37,10 @@ export default function WeatherCard({
     : location.country
   const relativeTime = useRelativeTime(fetchedAt)
   const { tempUnit, windUnit } = useUnits()
+  // Anima a temperatura ao trocar de cidade ou auto-refresh: o número
+  // "tica" entre o valor antigo e o novo. formatTemp já faz Math.round,
+  // então cada frame mostra o inteiro mais próximo do valor interpolado.
+  const animatedTemperature = useAnimatedNumber(current.temperature)
   const photo = photoFor(current.icon, isNight(current.time, today))
   const phrase = summary || `${capitalize(current.description)}.`
 
@@ -63,7 +68,7 @@ export default function WeatherCard({
 
           <div className="mb-8">
             <p className="font-serif text-ink tracking-tight leading-none text-8xl lg:text-9xl">
-              {formatTemp(current.temperature, tempUnit)}
+              {formatTemp(animatedTemperature, tempUnit)}
               <span className="text-amber">°</span>
             </p>
             <p className="text-ink/70 mt-3 text-base">{current.description}</p>
