@@ -1,11 +1,5 @@
 <p align="center">
-  <img src="frontend/public/favicon.svg" width="96" alt="Skytime" />
-</p>
-
-<h1 align="center">Skytime</h1>
-
-<p align="center">
-  <em>Seu céu, minuto a minuto.</em>
+  <img src="docs/hero.svg" alt="Skytime — Seu céu, minuto a minuto." width="100%" />
 </p>
 
 <p align="center">
