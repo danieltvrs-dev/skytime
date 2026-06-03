@@ -126,6 +126,10 @@ html, body, #root {
   .animate-stagger > * { animation: none; }
 }
 
+/* Override manual via classe — sidebar tem toggle "Reduzir animações" que
+ * adiciona .reduce-motion no <html>. Desliga o stagger independente do OS. */
+.reduce-motion .animate-stagger > * { animation: none; }
+
 body {
   font-family: var(--font-sans);
   color: var(--color-text);

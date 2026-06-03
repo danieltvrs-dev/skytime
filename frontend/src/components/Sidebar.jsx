@@ -1,7 +1,9 @@
 import { useEffect } from 'react'
 import { X } from 'lucide-react'
 
+import Switch from './Switch'
 import ThemeToggle from './ThemeToggle'
+import { useMotion } from '../contexts/MotionContext'
 
 /**
  * Painel lateral de preferências e informações do Skytime.
@@ -23,6 +25,8 @@ import ThemeToggle from './ThemeToggle'
  * precisar), rodapé colado no bottom da sidebar.
  */
 export default function Sidebar({ isOpen, onClose }) {
+  const { reduceMotion, setReduceMotion } = useMotion()
+
   // ESC fecha a sidebar. Listener só ativo enquanto aberta.
   useEffect(() => {
     if (!isOpen) return undefined
@@ -102,6 +106,17 @@ export default function Sidebar({ isOpen, onClose }) {
               Tema
             </h3>
             <ThemeToggle />
+          </section>
+
+          <section>
+            <h3 className="text-xs font-medium uppercase tracking-wider text-ink/55 mb-3">
+              Acessibilidade
+            </h3>
+            <Switch
+              checked={reduceMotion}
+              onChange={setReduceMotion}
+              label="Reduzir animações"
+            />
           </section>
 
           <section>
