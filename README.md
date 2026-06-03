@@ -203,28 +203,6 @@ A identidade V1 do Skytime usa azul céu como base, sol âmbar como acento quent
 
 Uma nuvem em espaço negativo dentro de um tile arredondado, com ponteiros do relógio "devolvidos" em cor sólida dentro da nuvem e o sol no canto superior direito. Nuvem mais relógio mais sol em um único bloco: lê bem de 16px a outdoor.
 
-## Deploy
-
-### Frontend (Netlify)
-
-O `netlify.toml` na raiz já configura build, redirect SPA e cache. Para publicar:
-
-1. Conecta o repositório no Netlify (Add new site, Import from Git)
-2. Define a env var `VITE_API_URL` apontando para a URL do backend hospedado
-3. Deploy automático em cada push para `main`
-
-### Backend (Railway, Render ou Fly.io)
-
-Hospedar um serviço Python + um Postgres. Em qualquer um dos três, o roteiro é parecido:
-
-1. Cria um Postgres gerenciado e copia a connection string
-2. Cria um serviço web apontado para o repositório, pasta `backend/`
-3. Comando de start: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-4. Env vars:
-   - `DATABASE_URL`, com driver asyncpg, exemplo `postgresql+asyncpg://...`
-   - `ALLOWED_ORIGINS`, com a URL do frontend publicado
-5. Roda `alembic upgrade head` uma vez (release command ou shell manual)
-
 ## Atribuições
 
 - Dados meteorológicos da [Open Meteo](https://open-meteo.com)
