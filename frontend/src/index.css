@@ -130,6 +130,22 @@ html, body, #root {
  * adiciona .reduce-motion no <html>. Desliga o stagger independente do OS. */
 .reduce-motion .animate-stagger > * { animation: none; }
 
+/* Hover lift: cards sobem 2px com sombra mais firme ao passar o mouse.
+ * Transição suave (200ms) entra/sai do estado. Desliga em reduce-motion. */
+.skytime-card {
+  transition: transform 200ms ease-out, box-shadow 200ms ease-out;
+}
+.skytime-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px -8px rgba(11, 27, 61, 0.18);
+}
+@media (prefers-reduced-motion: reduce) {
+  .skytime-card { transition: none; }
+  .skytime-card:hover { transform: none; box-shadow: inherit; }
+}
+.reduce-motion .skytime-card { transition: none; }
+.reduce-motion .skytime-card:hover { transform: none; box-shadow: inherit; }
+
 body {
   font-family: var(--font-sans);
   color: var(--color-text);

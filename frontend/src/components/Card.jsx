@@ -11,6 +11,9 @@
  * Usa tokens semânticos (surface, surface-deep, border) que mudam de valor
  * automaticamente no dark mode via .dark no <html>. A variant `dark` ganha
  * fundo ainda mais escuro no modo escuro pra manter o ritmo entre Zona 1 e 3.
+ *
+ * Hover lift: passa o mouse → card sobe 2px com sombra mais forte (.skytime-card
+ * desligado em .reduce-motion via regra no index.css).
  */
 const VARIANTS = {
   light: 'bg-surface/70 backdrop-blur-sm border border-border shadow-sm',
@@ -26,7 +29,10 @@ export default function Card({
   ...rest
 }) {
   return (
-    <Tag className={`rounded-3xl ${VARIANTS[variant]} ${className}`} {...rest}>
+    <Tag
+      className={`skytime-card rounded-3xl ${VARIANTS[variant]} ${className}`}
+      {...rest}
+    >
       {children}
     </Tag>
   )
