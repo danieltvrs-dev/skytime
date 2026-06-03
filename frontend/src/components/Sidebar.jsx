@@ -64,14 +64,31 @@ export default function Sidebar({ isOpen, onClose }) {
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        {/* Cabeçalho da sidebar — título + botão fechar */}
-        <header className="flex items-center justify-between px-5 py-4 border-b border-border shrink-0">
-          <h2 className="font-serif text-xl text-ink">Preferências</h2>
+        {/* Cabeçalho da sidebar — lockup completo da marca + botão fechar.
+         * Logo tile + wordmark "Skytime" em destaque; "Preferências" entra
+         * como subtítulo discreto pra não competir com a marca. */}
+        <header className="flex items-start justify-between px-5 py-5 border-b border-border shrink-0">
+          <div className="flex items-center gap-3">
+            <img
+              src="/favicon.svg"
+              alt=""
+              aria-hidden="true"
+              className="w-11 h-11 shrink-0"
+            />
+            <div className="leading-tight">
+              <p className="font-display text-xl font-bold tracking-tight text-ink">
+                Skytime
+              </p>
+              <p className="text-[11px] uppercase tracking-[0.14em] text-ink/55 mt-0.5">
+                Preferências
+              </p>
+            </div>
+          </div>
           <button
             type="button"
             onClick={onClose}
             aria-label="Fechar menu"
-            className="p-2 rounded-xl text-ink/70 hover:text-amber hover:bg-ink/5 focus:outline-none focus:ring-2 focus:ring-amber/30 transition"
+            className="p-2 rounded-xl text-ink/70 hover:text-amber hover:bg-ink/5 focus:outline-none focus:ring-2 focus:ring-amber/30 transition -mr-1"
           >
             <X className="w-5 h-5" strokeWidth={1.75} aria-hidden="true" />
           </button>
@@ -123,6 +140,9 @@ export default function Sidebar({ isOpen, onClose }) {
           </p>
           <p className="text-xs text-ink/45 tracking-wide mt-1">
             Seu céu, minuto a minuto.
+          </p>
+          <p className="text-[10px] uppercase tracking-[0.14em] text-ink/35 mt-3 tabular-nums">
+            v1.0 · {new Date().getFullYear()}
           </p>
         </footer>
       </aside>
