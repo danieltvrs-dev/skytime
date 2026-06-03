@@ -40,7 +40,7 @@ export default function WeatherCard({
   const phrase = summary || `${capitalize(current.description)}.`
 
   return (
-    <Card as="article" variant="lightHero" className="overflow-hidden">
+    <Card as="article" variant="lightHero">
       <div className="grid lg:grid-cols-2">
         {/* Coluna esquerda: dados */}
         <div className="p-8 flex flex-col">
@@ -101,10 +101,13 @@ export default function WeatherCard({
             </div>
           </div>
 
-          <div className="relative pt-6 border-t border-border mt-auto">
-            {/* Engrenagem de preferências de unidade, sobre o divisor.
-             * Posicionada absoluta pra "cortar" a linha no canto direito. */}
-            <UnitsMenu className="absolute -top-3.5 right-0" />
+          <div className="border-t border-border mt-auto pt-3">
+            {/* Engrenagem de preferências de unidade, ancorada inline embaixo
+             * do divisor à direita. Popover desce sem ser clipado pelo Card
+             * (overflow-hidden foi removido do wrapper). */}
+            <div className="flex justify-end mb-2">
+              <UnitsMenu />
+            </div>
             <dl className="grid grid-cols-3 gap-4">
               <Stat
                 icon={Thermometer}
