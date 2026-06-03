@@ -4,7 +4,7 @@ import { X } from 'lucide-react'
 import ThemeToggle from './ThemeToggle'
 
 /**
- * Painel lateral de preferências do Skytime.
+ * Painel lateral de preferências e informações do Skytime.
  *
  * Comportamento:
  *   - Desliza da esquerda quando isOpen vira true
@@ -14,9 +14,13 @@ import ThemeToggle from './ThemeToggle'
  *     por trás disputar com a sidebar)
  *   - Em telas pequenas (<sm) ocupa 100% da largura; >= sm fica em 320px
  *
- * Conteúdo nesta primeira iteração: só a seção Tema com o toggle pílula.
- * Outras preferências (°C/°F, cidade padrão, histórico) ficam onde estão
- * até decidirmos se a sidebar vale a pena.
+ * Seções:
+ *   - Tema: toggle pílula light/dark
+ *   - Sobre: créditos das APIs externas + link do repositório no GitHub
+ *   - Rodapé com tagline editorial (espelha o Footer da página)
+ *
+ * Layout flex-col: header fixo no topo, conteúdo no meio (com scroll se
+ * precisar), rodapé colado no bottom da sidebar.
  */
 export default function Sidebar({ isOpen, onClose }) {
   // ESC fecha a sidebar. Listener só ativo enquanto aberta.
@@ -56,12 +60,12 @@ export default function Sidebar({ isOpen, onClose }) {
         role="dialog"
         aria-modal="true"
         aria-label="Preferências"
-        className={`fixed top-0 left-0 h-full w-full sm:w-80 bg-surface shadow-2xl z-50 transition-transform duration-300 ease-out ${
+        className={`fixed top-0 left-0 h-full w-full sm:w-80 bg-surface shadow-2xl z-50 flex flex-col transition-transform duration-300 ease-out ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         {/* Cabeçalho da sidebar — título + botão fechar */}
-        <header className="flex items-center justify-between px-5 py-4 border-b border-border">
+        <header className="flex items-center justify-between px-5 py-4 border-b border-border shrink-0">
           <h2 className="font-serif text-xl text-ink">Preferências</h2>
           <button
             type="button"
@@ -73,16 +77,68 @@ export default function Sidebar({ isOpen, onClose }) {
           </button>
         </header>
 
-        {/* Conteúdo — uma seção por preferência */}
-        <div className="px-5 py-6 space-y-6">
+        {/* Conteúdo — flex-1 ocupa todo o espaço disponível, com scroll
+         * se precisar quando a sidebar ganhar mais seções. */}
+        <div className="flex-1 overflow-y-auto px-5 py-6 space-y-8">
           <section>
             <h3 className="text-xs font-medium uppercase tracking-wider text-ink/55 mb-3">
               Tema
             </h3>
             <ThemeToggle />
           </section>
+
+          <section>
+            <h3 className="text-xs font-medium uppercase tracking-wider text-ink/55 mb-3">
+              Sobre
+            </h3>
+            <div className="text-sm text-ink/70 space-y-2 leading-relaxed">
+              <p>
+                Dados meteorológicos da{' '}
+                <SidebarLink href="https://open-meteo.com">
+                  Open-Meteo
+                </SidebarLink>
+                .
+              </p>
+              <p>
+                Mapas da{' '}
+                <SidebarLink href="https://www.openstreetmap.org">
+                  OpenStreetMap
+                </SidebarLink>
+                {' & '}
+                <SidebarLink href="https://carto.com">CARTO</SidebarLink>.
+              </p>
+              <p className="pt-1">
+                <SidebarLink href="https://github.com/danieltvrs-dev/skytime">
+                  Código no GitHub
+                </SidebarLink>
+              </p>
+            </div>
+          </section>
         </div>
+
+        {/* Rodapé editorial — fica colado no bottom da sidebar */}
+        <footer className="px-5 py-5 border-t border-border shrink-0">
+          <p className="font-serif italic text-lg text-ink/75 leading-snug">
+            Skytime
+          </p>
+          <p className="text-xs text-ink/45 tracking-wide mt-1">
+            Seu céu, minuto a minuto.
+          </p>
+        </footer>
       </aside>
     </>
+  )
+}
+
+function SidebarLink({ href, children }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-amber hover:text-amber/80 underline-offset-2 hover:underline transition"
+    >
+      {children}
+    </a>
   )
 }
