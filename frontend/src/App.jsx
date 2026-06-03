@@ -28,6 +28,10 @@ import {
 import { buildDailySummary } from './utils/dailySummary'
 import { deslugify, slugify } from './utils/slug'
 
+// Intervalo do auto-refresh. Open-Meteo atualiza por hora; 5min é frequente
+// o suficiente pra mostrar dados recém-chegados sem martelar a API.
+const AUTO_REFRESH_MS = 5 * 60 * 1000
+
 function App() {
   return (
     <Routes>
@@ -86,6 +90,51 @@ function Skytime() {
       .finally(() => { if (!cancelled) setLoading(false) })
 
     return () => { cancelled = true }
+  }, [query])
+
+  // Auto-refresh silencioso a cada AUTO_REFRESH_MS. Mantém os dados em dia
+  // enquanto a aba fica aberta, sem mostrar skeleton nem flash.
+  // Pausa quando a aba está escondida (economiza dados/bateria) e refaz na
+  // hora quando volta a ficar visível se já passou metade do intervalo.
+  // Erros viram silêncio: mantém os dados anteriores, próximo ciclo tenta de novo.
+  const fetchedAtRef = useRef(fetchedAt)
+  useEffect(() => {
+    fetchedAtRef.current = fetchedAt
+  }, [fetchedAt])
+
+  useEffect(() => {
+    if (!query) return undefined
+
+    const refetch = async () => {
+      if (document.hidden) return
+      try {
+        const result =
+          query.type === 'city'
+            ? await getWeather(query.value)
+            : await getWeatherByCoords(query.value.lat, query.value.lon)
+        setData(result)
+        setFetchedAt(Date.now())
+      } catch {
+        /* silencioso — mantém dados anteriores, tenta de novo no próximo ciclo */
+      }
+    }
+
+    const intervalId = setInterval(refetch, AUTO_REFRESH_MS)
+
+    const handleVisibility = () => {
+      if (
+        !document.hidden &&
+        Date.now() - fetchedAtRef.current > AUTO_REFRESH_MS / 2
+      ) {
+        refetch()
+      }
+    }
+    document.addEventListener('visibilitychange', handleVisibility)
+
+    return () => {
+      clearInterval(intervalId)
+      document.removeEventListener('visibilitychange', handleVisibility)
+    }
   }, [query])
 
   // Sincroniza slug da URL pro query. Quando o usuário navega (search,
