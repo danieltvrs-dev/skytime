@@ -138,9 +138,28 @@ Hierarquia em `main.jsx`: ThemeProvider → MotionProvider → UnitsProvider →
 - **Testar responsividade mobile** real (estreitar < 1024px + abrir no celular). Provavelmente alguns ajustes finos no header ou cards.
 
 ### Deploy operacional
-- Frontend no Netlify: `netlify.toml` na raiz já configurado (rewrite SPA + cache). Setar `VITE_API_URL` apontando pro backend hospedado.
-- Backend em Railway, Render ou Fly.io: Postgres gerenciado + serviço Python rodando `uvicorn app.main:app --host 0.0.0.0 --port $PORT`. Env vars: `DATABASE_URL` (driver asyncpg) e `ALLOWED_ORIGINS`. Rodar `alembic upgrade head` uma vez.
-- Setup de domínio (skytime.app ou similar)
+
+**Caminho decidido (zero custo, sem cartão):**
+
+- **Frontend:** Netlify free. `netlify.toml` na raiz já configurado (rewrite SPA + cache). Setar env var `VITE_API_URL` apontando pra URL do backend Render.
+- **Backend:** Render free (web service Python). Roda `uvicorn app.main:app --host 0.0.0.0 --port $PORT`. Env vars: `DATABASE_URL` (driver asyncpg) e `ALLOWED_ORIGINS=https://skytime.netlify.app` (ou domínio próprio). Rodar `alembic upgrade head` no shell deles uma vez após primeiro deploy.
+- **Banco:** Neon free (Postgres serverless). Cria projeto, copia connection string, cola no `DATABASE_URL` do backend (precisa do prefixo `postgresql+asyncpg://`, não `postgresql://`).
+- **Keep-alive:** Render free dorme após 15min de inatividade (cold start de ~30s na próxima requisição). Configurar **cron-job.org** ou **UptimeRobot** pingando `https://skytime-api.onrender.com/health` (ou rota equivalente) a cada 14 minutos pra evitar o sleep. Esse hack é gray area no TOS do Render mas amplamente usado pela comunidade sem repercussão prática.
+- **Domínio (opcional):** subdomínio Netlify free (`skytime.netlify.app`) basta pra começar. Se quiser domínio próprio (`skytime.app`), R$50-80/ano, aponta DNS pro Netlify.
+
+**Por que esse caminho:**
+- Zero risco de cobrança surpresa (sem cartão exigido em nenhum dos 3)
+- Mantém o stack fullstack completo (vale o trabalho do Docker + Postgres + Alembic + FastAPI investidos)
+- Keep-alive resolve o cold start, então visitante não vê 30s de espera
+- Trade-off aceito: viola TOS leve do Render. Risco prático baixo.
+
+**Ordem de execução:**
+1. Criar Postgres no Neon → copiar connection string
+2. Criar backend no Render → conectar repo → setar env vars → deploy → rodar alembic
+3. Criar site no Netlify → conectar repo → setar `VITE_API_URL` → deploy
+4. Cadastrar URL do backend no cron-job.org com ping a cada 14min
+5. Testar tudo end-to-end (busca, geolocalização, histórico, dark mode, share)
+6. Gravar vídeo demo (com URL real) → adicionar ao README via `<video>` tag
 
 ### Features v2 (pendentes na task list, planejadas mas não implementadas)
 - **Task 13:** Formato de hora 12h/24h — extender UnitsContext com `hourFormat`, atualizar `formatHour` e componentes (CityClock, HourlyForecast, GoldenHourCard, RainTimeline)
