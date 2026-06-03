@@ -14,8 +14,15 @@ const MIN_QUERY_LENGTH = 2
  *                   ou submeter o form com o texto livre.
  *   onUseLocation:  callback () opcional; se ausente, o botão não aparece.
  *   isLocating:     boolean opcional; troca o ícone do botão por spinner.
+ *   isLoading:      boolean opcional; mostra spinner pequeno dentro do input
+ *                   quando o app está buscando dados climáticos da cidade.
  */
-export default function SearchBar({ onSearch, onUseLocation, isLocating }) {
+export default function SearchBar({
+  onSearch,
+  onUseLocation,
+  isLocating,
+  isLoading,
+}) {
   const [query, setQuery] = useState('')
   const [suggestions, setSuggestions] = useState([])
   const [isOpen, setIsOpen] = useState(false)
@@ -101,9 +108,21 @@ export default function SearchBar({ onSearch, onUseLocation, isLocating }) {
           aria-label="Buscar cidade"
           aria-autocomplete="list"
           aria-expanded={showDropdown}
+          aria-busy={isLoading || false}
           autoComplete="off"
-          className="w-full pl-11 pr-4 py-2.5 rounded-2xl bg-surface/75 backdrop-blur-sm border border-border text-ink placeholder:text-ink/45 focus:outline-none focus:border-amber/50 focus:ring-2 focus:ring-amber/20 transition"
+          className="w-full pl-11 pr-10 py-2.5 rounded-2xl bg-surface/75 backdrop-blur-sm border border-border text-ink placeholder:text-ink/45 focus:outline-none focus:border-amber/50 focus:ring-2 focus:ring-amber/20 transition"
         />
+
+        {/* Spinner sinaliza que o app está buscando dados pra cidade nova.
+         * Posicionado absolute no canto direito do input, dentro do padding
+         * reservado (pr-10). Some sem flash quando isLoading vira false. */}
+        {isLoading && (
+          <Loader2
+            className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink/45 animate-spin pointer-events-none"
+            strokeWidth={1.75}
+            aria-hidden="true"
+          />
+        )}
 
         {showDropdown && (
           <ul

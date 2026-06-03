@@ -214,6 +214,7 @@ function Skytime() {
           onSearch={handleSearch}
           onUseLocation={handleUseLocation}
           isLocating={geo.loading}
+          isLoading={loading}
         />
       </header>
 
