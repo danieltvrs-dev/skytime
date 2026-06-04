@@ -23,8 +23,13 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# Sobrescreve a URL vinda do alembic.ini com a do nosso settings
-config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
+# Sobrescreve a URL vinda do alembic.ini com a do nosso settings.
+# configparser do Python (que o Alembic usa) trata '%' como prefixo de
+# interpolação. Se a senha do banco tem '%' literal, isso quebra. Escapamos
+# duplicando ('%%') — o configparser decodifica de volta pra '%' ao ler,
+# então a URL chega correta no SQLAlchemy/asyncpg.
+escaped_url = settings.DATABASE_URL.replace("%", "%%")
+config.set_main_option("sqlalchemy.url", escaped_url)
 
 target_metadata = Base.metadata
 
