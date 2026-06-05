@@ -3,12 +3,27 @@
 </p>
 
 <p align="center">
+  <a href="https://skytimes.netlify.app"><img alt="Live" src="https://img.shields.io/badge/site-live-22c55e?style=flat-square&labelColor=0B1B3D" /></a>
+  <img alt="License" src="https://img.shields.io/badge/license-MIT-1E5CFF?style=flat-square&labelColor=0B1B3D" />
+  <img alt="React" src="https://img.shields.io/badge/react-19-61DAFB?style=flat-square&labelColor=0B1B3D&logo=react&logoColor=61DAFB" />
+  <img alt="FastAPI" src="https://img.shields.io/badge/fastapi-0.115-009688?style=flat-square&labelColor=0B1B3D&logo=fastapi&logoColor=ffffff" />
+  <img alt="Postgres" src="https://img.shields.io/badge/postgres-16-336791?style=flat-square&labelColor=0B1B3D&logo=postgresql&logoColor=ffffff" />
+  <img alt="Tailwind" src="https://img.shields.io/badge/tailwind-4-38BDF8?style=flat-square&labelColor=0B1B3D&logo=tailwindcss&logoColor=38BDF8" />
+</p>
+
+<p align="center">
   Dashboard de clima editorial para qualquer cidade do mundo.<br/>
   Clima atual, previsão horária e diária, mapa interativo, hora local e<br/>
   recomendações do dia em uma única tela contínua.
 </p>
 
 ---
+
+## Acesse
+
+- **Site:** [skytimes.netlify.app](https://skytimes.netlify.app)
+- **API:** [skytime-x0af.onrender.com](https://skytime-x0af.onrender.com)
+- **API docs:** [skytime-x0af.onrender.com/docs](https://skytime-x0af.onrender.com/docs)
 
 ## O que é
 
@@ -84,13 +99,36 @@ Os dados vêm da Open Meteo. A camada editorial em cima é própria: chips de re
 
 ### Banco
 
-- PostgreSQL 16 em container Docker, porta 5433
+- PostgreSQL 16 em container Docker no dev, Supabase na produção
 
 ### APIs externas, todas gratuitas e sem chave
 
 - [Open Meteo](https://open-meteo.com), clima atual, previsão horária e diária, geocoding direto
 - [Nominatim](https://nominatim.openstreetmap.org), reverse geocoding
 - [OpenStreetMap](https://www.openstreetmap.org) e [CARTO](https://carto.com), tiles do mapa
+
+## Identidade visual
+
+A identidade V1 do Skytime usa azul céu como base, sol âmbar como acento quente, navy para texto e modo escuro. Cream mantém o fundo claro respirável.
+
+| Token     | Hex       | Uso                          |
+| --------- | --------- | ---------------------------- |
+| Sky Deep  | `#0A4DA3` | Primária, fundo do logo      |
+| Sky       | `#1E5CFF` | Ações e links                |
+| Sun       | `#F9A03F` | Acento âmbar                 |
+| Navy      | `#0B1B3D` | Texto e modo escuro          |
+| Cream     | `#F7F4EE` | Fundo claro                  |
+| Sky Soft  | `#BFDBFE` | Apoio, hovers, estados       |
+
+### Tipografia
+
+- **Fraunces**, serif variável, para títulos e números editoriais
+- **Inter**, sans neutra, para UI e dados
+- **Outfit**, para o wordmark "skytime"
+
+### Símbolo
+
+Uma nuvem em espaço negativo dentro de um tile arredondado, com ponteiros do relógio "devolvidos" em cor sólida dentro da nuvem e o sol no canto superior direito. Nuvem mais relógio mais sol em um único bloco: lê bem de 16px a outdoor.
 
 ## Rodando localmente
 
@@ -156,6 +194,7 @@ skytime/
 │       ├── hooks/        useAnimatedNumber, useCountdown, useGeolocation
 │       ├── services/     cliente HTTP do backend
 │       └── utils/        formatadores, mood, golden hour, dailySummary
+├── docs/                 hero do README e outros assets de marca
 ├── docker-compose.yml
 ├── netlify.toml
 └── README.md
@@ -180,29 +219,6 @@ npm run preview                                   # serve o build local
 npm run lint                                      # ESLint
 ```
 
-## Identidade visual
-
-A identidade V1 do Skytime usa azul céu como base, sol âmbar como acento quente, navy para texto e modo escuro. Cream mantém o fundo claro respirável.
-
-| Token     | Hex       | Uso                          |
-| --------- | --------- | ---------------------------- |
-| Sky Deep  | `#0A4DA3` | Primária, fundo do logo      |
-| Sky       | `#1E5CFF` | Ações e links                |
-| Sun       | `#F9A03F` | Acento âmbar                 |
-| Navy      | `#0B1B3D` | Texto e modo escuro          |
-| Cream     | `#F7F4EE` | Fundo claro                  |
-| Sky Soft  | `#BFDBFE` | Apoio, hovers, estados       |
-
-### Tipografia
-
-- **Fraunces**, serif variável, para títulos e números editoriais
-- **Inter**, sans neutra, para UI e dados
-- **Outfit**, para o wordmark "skytime"
-
-### Símbolo
-
-Uma nuvem em espaço negativo dentro de um tile arredondado, com ponteiros do relógio "devolvidos" em cor sólida dentro da nuvem e o sol no canto superior direito. Nuvem mais relógio mais sol em um único bloco: lê bem de 16px a outdoor.
-
 ## Atribuições
 
 - Dados meteorológicos da [Open Meteo](https://open-meteo.com)
@@ -212,4 +228,4 @@ Uma nuvem em espaço negativo dentro de um tile arredondado, com ponteiros do re
 
 ## Licença
 
-MIT. Veja `LICENSE`.
+MIT. Veja [`LICENSE`](LICENSE).
