@@ -47,14 +47,30 @@ Frontend em `http://localhost:5173`, backend em `http://localhost:8000`.
 ✓ Fase 5   Busca por cidade + geolocalização
 ✓ Fase 6   Histórico no PostgreSQL
 ✓ Fase 6.5 Mapa Leaflet + timeline de chuva
-✓ Fase 7   Design pass (fechada em 2026-06-02): identidade V1 + dark mode +
-            sidebar + UnitsMenu + auto-refresh + 6 animações + README
-● Fase 8   PWA + responsividade + deploy:
-            - PWA pronto (manifest + service worker)
-            - Falta gravar vídeo demo (planejado pós-deploy)
-            - Falta testar responsividade mobile real
-            - Falta fazer deploy de frontend + backend
+✓ Fase 7   Design pass: identidade V1 + dark mode + sidebar +
+            UnitsMenu + auto-refresh + 6 animações + README
+✓ Fase 8   Deploy (fechada em 2026-06-04):
+            - Frontend: https://skytimes.netlify.app
+            - Backend:  https://skytime-x0af.onrender.com
+            - Banco:    Supabase (us-east-1)
+            - Keep-alive: cron-job.org a cada 10min em /health
+            Falta polish opcional: vídeo demo, testar mobile real, domínio
+            próprio (skytime.app), task 13 (12h/24h), task 14 (mood sidebar)
 ```
+
+## URLs de produção
+
+- **Frontend:** https://skytimes.netlify.app
+- **Backend:** https://skytime-x0af.onrender.com
+- **Backend docs:** https://skytime-x0af.onrender.com/docs
+
+## Mudanças importantes na Fase 8
+
+- **Banco:** Migrou de Neon (planejado) pra **Supabase** (UI do Neon deu pau na criação). Funciona igual, free tier de 500MB no plano grátis sem cartão.
+- **Connection string formato:** Usamos **Session pooler** (não Direct connection, que exige IPv6 ou add-on pago) — endpoint `aws-1-us-east-1.pooler.supabase.com:5432`.
+- **Driver Postgres na DATABASE_URL:** prefixo `postgresql+asyncpg://` (assíncrono, não psycopg2).
+- **Fix necessário no alembic/env.py:** escape `%` → `%%` antes de `set_main_option` (configparser de Python interpreta `%` como interpolação, quebra se senha tiver esse caractere). Já commitado.
+- **Render free:** dorme após 15min, então cron-job.org pinga `/health` a cada 10min. URL `*/10 * * * *`.
 
 ## Funcionalidades em produção
 
